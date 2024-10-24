@@ -3,14 +3,14 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-4"></div>
-            <div class="col-md-4">
+        <div class="col-md-3"></div>
+            <div class="col-md-3">
                 <br>
                 <h2 style="text-align: center;">Nuevo Cargo</h2>
                     <div>
                         <form action="{% url 'crearCargos' %}" method="POST" enctype="multipart/form-data" id="frm_nuevo_cargo">
                             {% csrf_token %}
-                            <label for="cargo"><b>CARGO:</b></label>
+                            <label for="cargo"><b>CARGO</b></label>
                             <select name="nombre" id="nombre" class="form-control" required>
                                 <option value="0" disabled="" selected="">SELECCIONE EL CARGO</option>
                                 <option value="Presidente">Presidente</option>

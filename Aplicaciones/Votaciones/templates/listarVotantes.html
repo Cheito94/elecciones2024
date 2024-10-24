@@ -1,13 +1,15 @@
 {% extends "./plantilla.html" %}
 {% block body %}
-<br>
-<div class="card">
-    <div class="card-title text-center">
-        <h3><b>LISTA DE VOTANTES</b></h3>
+    <br>
+    <div class="card">
+        <div class="card-title text-center">
+            <h3><b>LISTA DE VOTANTES</b></h3>
+        </div>
     </div>
-</div>
-<br>
-<div class="container">
+    <br>
+    <div class="text-center">
+        <a href="{% url 'crearVotante' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Ingresar mis datos</a>
+    </div>
     <table class="table table-borderd table-striped" id="tbl-votantes">
         <thead>
             <tr>
@@ -37,8 +39,7 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
-<script>
-    let table = new DataTable('#tbl-votantes');
-</script>
+    <script>
+        let table = new DataTable('#tbl-votantes');
+    </script>
 {% endblock %}

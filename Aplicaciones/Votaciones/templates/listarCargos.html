@@ -1,16 +1,15 @@
 {% extends "./plantilla.html" %}
 {% block body %}
-<br>
-<div class="card">
-    <div class="card-title text-center">
-        <h3><b>CARGOS</b></h3>
+    <br>
+    <div class="card">
+        <div class="card-title text-center">
+            <h3><b>CARGOS</b></h3>
+        </div>
     </div>
-</div>
-<br>
-<div class="text-center">
-    <a href="{% url 'crearCargos' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Crear Cargo</a>
-</div>
-<div class="container">
+    <br>
+    <div class="text-center">
+        <a href="{% url 'crearCargos' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Crear Cargo</a>
+    </div>
     <table class="table table-borderd table-striped table-hover" id="tbl-cargos">
         <thead>
             <tr>
@@ -31,7 +30,6 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
     <script>
         let table = new DataTable('#tbl-cargos');
     </script>
