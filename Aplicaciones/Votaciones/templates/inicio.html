@@ -1,0 +1,32 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+{% block body %}
+
+<br>
+<h1 class="text-center">ELECCIONES 2024</h1>
+<br>
+<div class="container bg-ligth">
+    <div class="row">
+        <div class="col-11.5 text-center">
+            <img src="{% static 'img/democracia.jpg' %}" height="300px" width="500px" alt="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 text-center">
+            <h3>Democracia</h3>
+            <br>
+            <h6>
+                La democracia es una forma de organización social y política presentada
+                en el platonismo y aristotelismo que atribuye la titularidad del poder
+                al conjunto de la ciudadanía. En sentido estricto, la democracia es un
+                tipo de organización del Estado en el cual las decisiones colectivas son
+                adoptadas por el pueblo mediante herramientas de participación directa o
+                indirecta que confieren legitimidad a sus representantes.
+            </h6>
+        </div>
+        <div class="col-4 text-center"></div>
+    </div>
+</div>
+<br>
+{% endblock %}

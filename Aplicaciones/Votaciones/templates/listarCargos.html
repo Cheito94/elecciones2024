@@ -1,0 +1,38 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<br>
+<div class="card">
+    <div class="card-title text-center">
+        <h3><b>CARGOS</b></h3>
+    </div>
+</div>
+<br>
+<div class="text-center">
+    <a href="{% url 'crearCargos' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Crear Cargo</a>
+</div>
+<div class="container">
+    <table class="table table-borderd table-striped table-hover" id="tbl-cargos">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Cargo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cargo in cargos %}
+            <tr>
+                <td>{{ cargo.id }}</td>
+                <td>{{ cargo.nombre }}</td>
+                <td>   
+                    <a href="{% url 'eliminarCargos' cargo.id %}" onclick="return confirm('¿Está seguro que desea eliminar este cargo?')" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <script>
+        let table = new DataTable('#tbl-cargos');
+    </script>
+{% endblock %}

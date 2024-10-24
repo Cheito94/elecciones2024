@@ -1,0 +1,48 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <br>
+                <h2 style="text-align: center;">Nuevo Cargo</h2>
+                    <div>
+                        <form action="{% url 'crearCargos' %}" method="POST" enctype="multipart/form-data" id="frm_nuevo_cargo">
+                            {% csrf_token %}
+                            <label for="cargo"><b>CARGO:</b></label>
+                            <select name="nombre" id="nombre" class="form-control" required>
+                                <option value="0" disabled="" selected="">SELECCIONE EL CARGO</option>
+                                <option value="Presidente">Presidente</option>
+                                <option value="Vicepresidente">Vicepresidente</option>
+                                <option value="Secretario">Secretario</option>
+                                <option value="Tesorero">Tesorero</option>
+                                <option value="Vocal">Vocal</option>
+                            </select>
+                            <br>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="{% url 'listarCargos' %}" class="btn btn-outline-secondary">Volver</a>
+                            <br><br>
+                        </form>
+                    </div>
+            </div>
+    </div>
+</div>
+
+<script>
+    $("#frm_nuevo_cargo").validate({
+        rules: {
+            nombre:{
+                required: true
+            }
+            },
+            messages:{
+            nombre:{
+                required: "Por favor seleccione el cargo"
+                }
+            }
+        });
+</script>
+
+{% endblock %}

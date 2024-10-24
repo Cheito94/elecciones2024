@@ -1,0 +1,44 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<br>
+<div class="card">
+    <div class="card-title text-center">
+        <h3><b>LISTA DE VOTANTES</b></h3>
+    </div>
+</div>
+<br>
+<div class="container">
+    <table class="table table-borderd table-striped" id="tbl-votantes">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CI</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for votante in votantes %}
+            <tr>
+                <td>{{ votante.id }}</td>
+                <td>{{ votante.ci }}</td>
+                <td>{{ votante.nombre }}</td>
+                <td>{{ votante.apellido }}</td>
+                <td>{{ votante.email }}</td>
+                <td>{{ votante.fechaNacimiento }}</td>
+
+                <td>   
+                    <a href="{% url 'eliminarVotantes' votante.id %}" onclick="return confirm('¿Está seguro que desea eliminar este votante?')" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    let table = new DataTable('#tbl-votantes');
+</script>
+{% endblock %}

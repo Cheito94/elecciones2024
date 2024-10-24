@@ -1,0 +1,55 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <br>
+                <h2 style="text-align: center;">Ingrese su voto</h2>
+                <form method="GET" action="{% url 'crearVoto' %}">
+                    <label for="cargo">Cargo:</label>
+                    <select name="cargo" id="cargo" class="form-control" onchange="this.form.submit()">
+                        <option value="">Seleccione un cargo</option>
+                        {% for cargo in cargos %}
+                            <option value="{{ cargo.id }}" {% if request.GET.cargo == cargo.id|stringformat:"s" %}selected{% endif %}>
+                                {{ cargo.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+
+                <form action="{% url 'crearVoto' %}" method="POST">
+                    {% csrf_token %}
+                    <label for="candidato">Candidato:</label>
+                    <select name="candidato" id="candidato" class="form-control">
+                        {% for candidato in candidatos %}
+                            <option value="{{ candidato.id }}">{{ candidato.nombre }} {{ candidato.apellido }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="votante">Votante:</label>
+                    <select name="votante" id="votante" class="form-control">
+                        {% for votante in votantes %}
+                            <option value="{{ votante.id }}">{{ votante.nombre }} {{ votante.apellido }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <!-- Campo oculto para cargo -->
+                    <input type="hidden" name="cargo" value="{{ request.GET.cargo }}">
+                    <!----------------------------->
+                    <label for="">Fecha de Voto</label>
+                    <input type="date" name="fecha" id="fecha" class="form-control" placeholder="Ingrese la fecha" required>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'verCandidatos' %}" class="btn btn-outline-secondary">Volver</a>
+                </form>
+            
+        </div>
+    </div>
+</div>
+
+
+    <br>
+{% endblock %}

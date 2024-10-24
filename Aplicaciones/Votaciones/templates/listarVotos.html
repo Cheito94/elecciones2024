@@ -1,0 +1,42 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<br>
+<div class="card">
+    <div class="card-title text-center">
+        <h3><b>LISTA DE VOTOS</b></h3>
+    </div>
+</div>
+<br>
+<div class="text-center">
+    <a href="{% url 'crearVoto' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Realizar mi voto</a>
+</div>
+<div class="container">
+    <table class="table table-borderd table-striped" id="tbl-votos">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Candidato</th>
+                <th>Cargo</th>
+                <th>Votante</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for voto in votos %}
+                <tr>
+                    <td>{{ voto.id }}</td>
+                    <td>{{ voto.candidato.nombre }} {{ voto.candidato.apellido }}</td>
+                    <td>{{ voto.cargo.nombre }}</td>
+                    <td>{{ voto.votante.nombre }} {{ voto.votante.apellido }}</td>
+                    <td>{{ voto.fecha|date:"d-m-Y H:i" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    let table = new DataTable('#tbl-votos');
+</script>
+
+{% endblock %}
