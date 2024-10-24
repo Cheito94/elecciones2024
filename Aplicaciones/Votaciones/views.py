@@ -63,8 +63,12 @@ def listarCandidatos(request):
     return render(request, 'listarCandidatos.html', {'candidatos': candidatos})
 
 def verCandidatos(request):
-    candidatos = Candidato.objects.all()
-    return render(request, 'verCandidatos.html', {'candidatos': candidatos})
+    # Obtener todos los cargos únicos
+    cargos = Candidato.objects.values_list('cargo__nombre', flat=True).distinct()
+    # Crear un diccionario de candidatos agrupados por cargo
+    candidatos_por_cargo = {cargo: Candidato.objects.filter(cargo__nombre=cargo) for cargo in cargos}
+    
+    return render(request, 'verCandidatos.html', {'candidatos_por_cargo': candidatos_por_cargo})
 
 def crearCandidato(request):
     if request.method == 'POST':
