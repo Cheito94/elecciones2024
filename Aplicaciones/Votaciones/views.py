@@ -32,6 +32,10 @@ def listarVotantes(request):
     votantes = Votante.objects.all()
     return render(request, 'listarVotantes.html', {'votantes': votantes})
 
+def verVotantes(request):
+    votantes = Votante.objects.all()
+    return render(request, 'verVotantes.html', {'votantes': votantes})
+
 def crearVotante(request):
     if request.method == 'POST':
         ced = request.POST['ci']
@@ -44,7 +48,7 @@ def crearVotante(request):
             return render(request, 'crearVotante.html')
         nuevoVotante = Votante.objects.create(ci=ced, nombre=nom, apellido=apell, email=corr, fechaNacimiento=fechNac)
         messages.success(request, 'Votante guardado con éxito')
-        return redirect('listarVotantes')
+        return redirect('verVotantes')
     return render(request, 'crearVotante.html')
                                             
 def eliminarVotantes(request, id):
@@ -57,6 +61,10 @@ def eliminarVotantes(request, id):
 def listarCandidatos(request):
     candidatos = Candidato.objects.all()
     return render(request, 'listarCandidatos.html', {'candidatos': candidatos})
+
+def verCandidatos(request):
+    candidatos = Candidato.objects.all()
+    return render(request, 'verCandidatos.html', {'candidatos': candidatos})
 
 def crearCandidato(request):
     if request.method == 'POST':
@@ -119,7 +127,7 @@ def crearVoto(request):
         nuevoVoto = Voto.objects.create(fecha=feVoto, candidato=candidato, cargo=cargo, votante=votante)
         
         messages.success(request, 'Voto guardado con éxito')
-        return redirect('listarVotos')
+        return redirect('inicio')
 
     cargos = Cargo.objects.all()
     votantes = Votante.objects.all()

@@ -11,7 +11,7 @@
     <a href="{% url 'crearVoto' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Realizar mi voto</a>
 </div>
 <div class="container">
-    <table class="table table-borderd table-striped">
+    <table class="table table-borderd table-striped" id="tbl-votos">
         <thead>
             <tr>
                 <th>ID</th>
@@ -34,4 +34,9 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    let table = new DataTable('#tbl-votos');
+</script>
+
 {% endblock %}

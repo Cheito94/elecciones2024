@@ -7,32 +7,28 @@
     </div>
 </div>
 <br>
+<div class="text-center">
+    <a href="{% url 'crearVotante' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Ingresar mis datos</a>
+</div>
 <div class="container">
     <table class="table table-borderd table-striped" id="tbl-votantes">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>CI</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Correo</th>
                 <th>Fecha de Nacimiento</th>
-                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for votante in votantes %}
             <tr>
-                <td>{{ votante.id }}</td>
                 <td>{{ votante.ci }}</td>
                 <td>{{ votante.nombre }}</td>
                 <td>{{ votante.apellido }}</td>
                 <td>{{ votante.email }}</td>
                 <td>{{ votante.fechaNacimiento }}</td>
-
-                <td>   
-                    <a href="{% url 'eliminarVotantes' votante.id %}" onclick="return confirm('¿Está seguro que desea eliminar este votante?')" class="btn btn-danger">Eliminar</a>
-                </td>
             </tr>
             {% endfor %}
         </tbody>
