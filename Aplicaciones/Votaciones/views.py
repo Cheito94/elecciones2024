@@ -3,7 +3,9 @@ from . models import Cargo, Votante, Candidato, Voto
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib import messages 
+from django.contrib import messages
+from django.contrib.auth import authenticate, login as auth_login
+
 # Create your views here.
 def inicio(request):
     return render(request, 'inicio.html')
@@ -141,11 +143,17 @@ def crearVoto(request):
     return render(request, 'crearVoto.html', {'candidatos': candidatos, 'cargos': cargos, 'votantes': votantes})
 
 
-
-
-
-        
-
-
+def votante_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')  # Usa .get() para evitar el error
+        password = request.POST.get('password')  # Usa .get() para evitar el error
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect('inicio')
+        else:
+            messages.error(request, 'Credenciales inválidas')
+            return render(request, 'login.html')
+    return render(request, 'login.html')
 
     

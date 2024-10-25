@@ -8,8 +8,12 @@
 </div>
 <br>
 <div class="text-center">
-    <a href="{% url 'crearVoto' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Realizar Voto</a>
+    <!-- Ajustamos el URL para redirigir al login -->
+    <a href="{% url 'login' %}" class="btn btn-outline-info">
+        <i class="fas fa-plus"></i> Realizar Voto
+    </a>
 </div>
+
 <div class="container">
     <table class="table table-borderd table-striped table-hover text-center" id="tbl-candidatos">
         <thead>
@@ -46,4 +50,3 @@ let table = new DataTable('#tbl-candidatos');
 </script>
 
 {% endblock %}
-

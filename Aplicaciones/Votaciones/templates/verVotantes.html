@@ -18,7 +18,9 @@
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Correo</th>
-                <th>Fecha de Nacimiento</th>
+                <th>Fecha de Nacimiento</th>{
+                <th>Contraseña</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -29,6 +31,7 @@
                 <td>{{ votante.apellido }}</td>
                 <td>{{ votante.email }}</td>
                 <td>{{ votante.fechaNacimiento }}</td>
+                <td>{{ votante.contraseña }}</td>
             </tr>
             {% endfor %}
         </tbody>
