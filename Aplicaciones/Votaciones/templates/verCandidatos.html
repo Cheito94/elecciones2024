@@ -13,40 +13,50 @@
         <i class="fas fa-plus"></i> Realizar Voto
     </a>
 </div>
+<<<<<<< HEAD
 
+=======
+<br>
+>>>>>>> 39810d544388caf53bc1cab7c252a8fed383910e
 <div class="container">
-    <table class="table table-borderd table-striped table-hover text-center" id="tbl-candidatos">
-        <thead>
-            <tr>
-                <th>CI</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Cargo</th>
-                <th>Foto</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for candidato in candidatos %}
-                <tr>
-                    <td>{{ candidato.ci }}</td>
-                    <td>{{ candidato.nombre }}</td>
-                    <td>{{ candidato.apellido }}</td>
-                    <td>{{ candidato.cargo.nombre }}</td> 
-                    <td>
-                        {% if candidato.foto %}
-                            <img src="{{ candidato.foto.url }}" height="100px" width="100px">
-                        {% else %}
-                            No hay foto disponible
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="row">
+        {% for cargo, candidatos in candidatos_por_cargo.items %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-center">
+                        <h4>{{ cargo }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th>CI</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Foto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for candidato in candidatos %}
+                                    <tr>
+                                        <td>{{ candidato.ci }}</td>
+                                        <td>{{ candidato.nombre }}</td>
+                                        <td>{{ candidato.apellido }}</td>
+                                        <td>
+                                            {% if candidato.foto %}
+                                                <img src="{{ candidato.foto.url }}" alt="Foto del candidato" class="img-fluid" style="max-height: 100px;">
+                                            {% else %}
+                                                No hay foto disponible
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
-
-<script>
-let table = new DataTable('#tbl-candidatos');
-</script>
-
 {% endblock %}
