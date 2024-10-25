@@ -3,8 +3,10 @@ from . models import Cargo, Votante, Candidato, Voto
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 def inicio(request):
@@ -45,12 +47,24 @@ def crearVotante(request):
         apell = request.POST['apellido']
         corr = request.POST['email']
         fechNac = request.POST.get('fechaNacimiento')
+        password = request.POST['password']  # Obtén la contraseña del formulario
+        
         if Votante.objects.filter(ci=ced).exists():
             messages.error(request, 'Ya existe un votante con esta cédula.')
             return render(request, 'crearVotante.html')
-        nuevoVotante = Votante.objects.create(ci=ced, nombre=nom, apellido=apell, email=corr, fechaNacimiento=fechNac)
+        
+        # Crea el nuevo votante, guardando la contraseña encriptada
+        nuevoVotante = Votante.objects.create(
+            ci=ced,
+            nombre=nom,
+            apellido=apell,
+            email=corr,
+            fechaNacimiento=fechNac,
+            password=make_password(password)  # Encriptar y guardar la contraseña
+        )
         messages.success(request, 'Votante guardado con éxito')
         return redirect('verVotantes')
+    
     return render(request, 'crearVotante.html')
                                             
 def eliminarVotantes(request, id):
@@ -146,19 +160,26 @@ def crearVoto(request):
 
     return render(request, 'crearVoto.html', {'candidatos': candidatos, 'cargos': cargos, 'votantes': votantes})
 
-
-
 def votante_login(request):
     if request.method == 'POST':
-        username = request.POST.get('username')  # Usa .get() para evitar el error
-        password = request.POST.get('password')  # Usa .get() para evitar el error
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            auth_login(request, user)
-            return redirect('inicio')
+        username = request.POST.get('username')  
+        password = request.POST.get('password')  
+
+        try:
+            votante = Votante.objects.get(ci=username)
+        except Votante.DoesNotExist:
+            messages.error(request, 'Credenciales inválidas')
+            return render(request, 'login.html')
+
+        # Verificar la contraseña
+        if check_password(password, votante.password):
+            request.session['votante_id'] = votante.id  
+            messages.success(request, 'Inicio de sesión exitoso')
+            return redirect('inicio')  # Redirige a la página principal
         else:
             messages.error(request, 'Credenciales inválidas')
             return render(request, 'login.html')
+
     return render(request, 'login.html')
 
 
