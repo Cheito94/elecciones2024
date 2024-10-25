@@ -147,7 +147,7 @@ def crearVoto(request):
     return render(request, 'crearVoto.html', {'candidatos': candidatos, 'cargos': cargos, 'votantes': votantes})
 
 
-<<<<<<< HEAD
+
 def votante_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')  # Usa .get() para evitar el error
@@ -160,10 +160,10 @@ def votante_login(request):
             messages.error(request, 'Credenciales inválidas')
             return render(request, 'login.html')
     return render(request, 'login.html')
-=======
-        
 
 
->>>>>>> 39810d544388caf53bc1cab7c252a8fed383910e
-
+    
+    
+    
+    
     
