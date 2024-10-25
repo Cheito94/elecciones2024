@@ -145,9 +145,6 @@ def crearVoto(request):
     return render(request, 'crearVoto.html', {'candidatos': candidatos, 'cargos': cargos, 'votantes': votantes})
 
 
-
-
-
         
 
 
