@@ -10,9 +10,16 @@
 </div>
 <br>
 <div class="text-center">
-    <a href="{% url 'crearVoto' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Realizar Voto</a>
+    <!-- Ajustamos el URL para redirigir al login -->
+    <a href="{% url 'login' %}" class="btn btn-outline-info">
+        <i class="fas fa-plus"></i> Realizar Voto
+    </a>
 </div>
+<<<<<<< HEAD
+
+=======
 <br>
+>>>>>>> 39810d544388caf53bc1cab7c252a8fed383910e
 <div class="container">
     <div class="row">
         {% for cargo, candidatos in candidatos_por_cargo.items %}

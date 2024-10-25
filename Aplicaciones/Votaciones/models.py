@@ -1,13 +1,19 @@
+from django import forms
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
 
 # Modelo Votante
-class Votante(models.Model):
+class Votante(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
     ci = models.CharField(max_length=10, null=True, unique=True)
     nombre = models.CharField(max_length=100, null=True)
     apellido = models.CharField(max_length=100, null=True)
     email = models.EmailField(max_length=100, null=True)
     fechaNacimiento = models.DateTimeField(null=True)
+    password = models.CharField(max_length=128, null=False, default='temporary_password')
+
+    USERNAME_FIELD = 'ci'  # Define que el campo ci será el campo de login
+    REQUIRED_FIELDS = ['nombre', 'apellido', 'email']
 
     def __str__(self):
         fila = "{0}: {1} - {2} - {3} - {4} - {5}"

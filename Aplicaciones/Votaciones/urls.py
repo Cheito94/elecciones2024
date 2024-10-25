@@ -1,6 +1,7 @@
 #configurando redireccionamiento
 from django.urls import path
 from . import views
+from django.contrib.auth.views import LoginView
 urlpatterns = [
     path('',views.inicio, name='inicio'),
 
@@ -25,6 +26,9 @@ urlpatterns = [
     #----------VOTO----------
     path('listarVotos/', views.listarVotos, name='listarVotos'),
     path('crearVoto/', views.crearVoto, name='crearVoto'),
-
+    
+    
+    
+    path('login/', views.votante_login, name='login'),
 
     ]

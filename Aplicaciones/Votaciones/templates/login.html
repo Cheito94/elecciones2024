@@ -1,0 +1,40 @@
+{% extends './plantilla.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Iniciar Sesión</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label for="username">Usuario</label>
+                            <input type="text" name="username" id="username" class="form-control" placeholder="Ingresa tu nombre de usuario" required>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="password">Contraseña</label>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="{% url 'crearVoto' %}" class="btn btn-outline-secondary">Iniciar Sesión</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
