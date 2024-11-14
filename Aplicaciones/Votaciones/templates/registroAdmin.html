@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Administrador</title>
+</head>
+<body>
+    <h2>Registro de Administrador</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Campo para nombre de usuario -->
+        <div>
+            <label for="username">Nombre de Usuario</label>
+            <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required>
+        </div>
+
+        <!-- Campo para contraseña -->
+        <div>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+        </div>
+
+        <!-- Campo para confirmar contraseña -->
+        <div>
+            <label for="password_confirm">Confirmar Contraseña</label>
+            <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirme su contraseña" required>
+        </div>
+
+        <button type="submit">Registrar</button>
+
+    </form>
+
+    <!-- Mostrar errores si existen -->
+    {% if errors %}
+        <ul>
+            {% for error in errors %}
+                <li style="color: red;">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p>¿Ya tienes una cuenta? <a href="{% url 'loginAdmin' %}">Inicia sesión aquí</a></p>
+</body>
+</html>

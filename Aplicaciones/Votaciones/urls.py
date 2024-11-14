@@ -2,6 +2,9 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LogoutView
+from django.contrib.auth import views as auth_views
+
 urlpatterns = [
     path('',views.inicio, name='inicio'),
 
@@ -28,7 +31,13 @@ urlpatterns = [
     path('crearVoto/', views.crearVoto, name='crearVoto'),
     
     
-    
     path('login/', views.votante_login, name='login'),
+
+    #-------ADMINISTRADOR------------
+
+    path('registro_admin/', views.registro_administrador, name='registroAdmin'),
+    path('login_admin/', views.login_administrador, name='loginAdmin'),
+    path('pagina_admin/', views.pagina_administrador, name='paginaAdmin'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     ]

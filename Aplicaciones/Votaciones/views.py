@@ -7,7 +7,10 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth import logout
+from django.contrib.auth import login
 # Create your views here.
 def inicio(request):
     return render(request, 'inicio.html')
@@ -183,8 +186,66 @@ def votante_login(request):
     return render(request, 'login.html')
 
 
+#------------------------------ADMINISTRADOR------------------------------
+def registro_administrador(request):
+    if request.method == 'POST':
+        # Recoger los datos enviados en el formulario
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        password_confirm = request.POST.get('password_confirm')
+        
+        # Lista para almacenar los errores
+        errors = []
+
+        # Validaciones
+        if not username or not password or not password_confirm:
+            errors.append('Todos los campos son obligatorios.')
+        elif password != password_confirm:
+            errors.append('Las contraseñas no coinciden.')
+        elif User.objects.filter(username=username).exists():
+            errors.append('El nombre de usuario ya existe.')
+
+        # Si no hay errores, crear al usuario
+        if not errors:
+            user = User.objects.create_user(username=username, password=password)
+            user.is_staff = True  # Asegura que es un administrador
+            user.save()
+            
+            # Iniciar sesión automáticamente después de registrar
+            login(request, user)
+            
+            return redirect('loginAdmin')  # Redirige al login del administrador
+        
+        # Si hay errores, volver a mostrar el formulario con los errores
+        return render(request, 'registroAdmin.html', {'errors': errors})
     
+    return render(request, 'registroAdmin.html')
+# Login de administrador
+def login_administrador(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        # Autenticar al usuario
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None and user.is_staff:  # Verificar que el usuario es un administrador
+            login(request, user)
+            return redirect('paginaAdmin')  # Redirigir al dashboard de administrador o página específica
+        else:
+            # Si las credenciales no son válidas o no es un administrador
+            messages.error(request, 'Credenciales no válidas o no tienes permisos de administrador.')
+
+    return render(request, 'loginAdmin.html')
     
-    
-    
-    
+@login_required
+def pagina_administrador(request):
+    # Verificar si el usuario tiene permisos de administrador
+    if request.user.is_staff or (hasattr(request.user, 'is_staff') and request.user.is_admin):
+        return render(request, 'paginaAdmin.html')  # Renderiza la página exclusiva del admin
+    else:
+        return redirect('loginAdmin')  # Redirige al login si no es admin
+
+def logout_administrador(request):
+    logout(request)
+    return redirect('loginAdmin') 
