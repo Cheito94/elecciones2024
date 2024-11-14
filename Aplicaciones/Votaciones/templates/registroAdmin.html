@@ -1,46 +1,83 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Administrador</title>
-</head>
-<body>
-    <h2>Registro de Administrador</h2>
-    <form method="POST">
-        {% csrf_token %}
-        
-        <!-- Campo para nombre de usuario -->
-        <div>
-            <label for="username">Nombre de Usuario</label>
-            <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required>
+{% extends './plantilla.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Registro de Administrador</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="frm_registroAdmin">
+                        {% csrf_token %}
+                        <!-- Campo para nombre de usuario -->
+                        <div class="form-group">
+                            <label for="username">Nombre de Usuario</label>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Ingrese su nombre de usuario" required>
+                        </div>
+
+                        <!-- Campo para contraseña -->
+                        <div class="form-group mt-3">
+                            <label for="password">Contraseña</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Ingrese su contraseña" required>
+                        </div>
+
+                        <!-- Campo para confirmar contraseña -->
+                        <div class="form-group mt-3">
+                            <label for="password_confirm">Confirmar Contraseña</label>
+                            <input type="password" id="password_confirm" name="password_confirm" class="form-control" placeholder="Confirme su contraseña" required>
+                        </div>
+
+                        <!-- Mostrar errores si existen -->
+                        {% if errors %}
+                            <div class="alert alert-danger mt-3">
+                                <ul>
+                                    {% for error in errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Registrar</button>
+                        </div>
+                    </form>
+
+                    <!-- Enlace para redirigir al login -->
+                    <div class="text-center mt-3">
+                        <p>¿Ya tienes una cuenta? <a href="{% url 'loginAdmin' %}" class="btn btn-outline-secondary">Inicia sesión aquí</a></p>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Campo para contraseña -->
-        <div>
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
-        </div>
-
-        <!-- Campo para confirmar contraseña -->
-        <div>
-            <label for="password_confirm">Confirmar Contraseña</label>
-            <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirme su contraseña" required>
-        </div>
-
-        <button type="submit">Registrar</button>
-
-    </form>
-
-    <!-- Mostrar errores si existen -->
-    {% if errors %}
-        <ul>
-            {% for error in errors %}
-                <li style="color: red;">{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <p>¿Ya tienes una cuenta? <a href="{% url 'loginAdmin' %}">Inicia sesión aquí</a></p>
-</body>
-</html>
+    </div>
+</div>
+<script>
+    $("#frm_registroAdmin").validate({
+        rules: {
+            username: {
+                required: true,
+            },
+            password: {
+                required: true,
+            },
+            password_confirm: {
+                required: true
+            }
+        },
+        messages: {
+            username: {
+                required: "Por favor ingrese el usuario",
+            },
+            password: {
+                required: "Por favor ingrese la contraseña",
+            },
+            password_confirm: {
+                required: "Por favor confirme la contraseña",
+            }
+        }
+    });
+</script>
+{% endblock %}
