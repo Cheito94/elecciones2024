@@ -6,7 +6,11 @@
         <div class="col-md-4"></div>
             <div class="col-md-4">
                 <br>
+                <!-- Mostrar el nombre del votante aquí -->
+                <h3 style="text-align: center;">Bienvenido, {{ votante_nombre }}</h3>
                 <h2 style="text-align: center;">Ingrese su voto</h2>
+                
+                <!-- Formulario para seleccionar el cargo -->
                 <form method="GET" action="{% url 'crearVoto' %}">
                     <label for="cargo">Cargo:</label>
                     <select name="cargo" id="cargo" class="form-control" onchange="this.form.submit()">
@@ -19,6 +23,7 @@
                     </select>
                 </form>
 
+                <!-- Formulario de votación -->
                 <form action="{% url 'crearVoto' %}" method="POST">
                     {% csrf_token %}
                     <label for="candidato">Candidato:</label>
@@ -28,16 +33,14 @@
                         {% endfor %}
                     </select>
                     <br>
-                    <label for="votante">Votante:</label>
-                    <select name="votante" id="votante" class="form-control">
-                        {% for votante in votantes %}
-                            <option value="{{ votante.id }}">{{ votante.nombre }} {{ votante.apellido }}</option>
-                        {% endfor %}
-                    </select>
-                    <br>
-                    <!-- Campo oculto para cargo -->
+                    
+                    <!-- Mostrar el nombre del votante directamente -->
+                    <label>Votante:</label>
+                    <input type="text" class="form-control" value="{{ votante_nombre }}" readonly>
+                    
+                    <!-- Campo oculto para el cargo -->
                     <input type="hidden" name="cargo" value="{{ request.GET.cargo }}">
-                    <!----------------------------->
+
                     <label for="">Fecha de Voto</label>
                     <input type="date" name="fecha" id="fecha" class="form-control" placeholder="Ingrese la fecha" required>
                     <br>
@@ -45,11 +48,8 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="{% url 'verCandidatos' %}" class="btn btn-outline-secondary">Volver</a>
                 </form>
-            
+            </div>
         </div>
     </div>
-</div>
-
-
     <br>
 {% endblock %}

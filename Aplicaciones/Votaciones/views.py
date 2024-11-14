@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 
 # Create your views here.
 def inicio(request):
@@ -134,57 +135,72 @@ def listarVotos(request):
     return render(request, 'listarVotos.html', {'votos': votos})
 
 def crearVoto(request):
+    votante_id = request.session.get('votante_id')  # Obtener el votante actual de la sesión
+    votante = get_object_or_404(Votante, id=votante_id)
+
     if request.method == 'POST':
         candidato_id = request.POST['candidato']
         feVoto = request.POST['fecha']
-        cargo = request.POST['cargo']
-        votante_id = request.POST['votante']
-        
+        cargo_id = request.POST['cargo']
+
         candidato = get_object_or_404(Candidato, id=candidato_id)
-        cargo = get_object_or_404(Cargo, id=cargo)
-        votante = get_object_or_404(Votante, id=votante_id)
-        
-        nuevoVoto = Voto.objects.create(fecha=feVoto, candidato=candidato, cargo=cargo, votante=votante)
-        
-        messages.success(request, 'Voto guardado con éxito')
-        return redirect('inicio')
+        cargo = get_object_or_404(Cargo, id=cargo_id)
 
-    cargos = Cargo.objects.all()
-    votantes = Votante.objects.all()
+        # Verificar si el votante ya ha votado para el cargo seleccionado
+        if Voto.objects.filter(votante=votante, cargo=cargo).exists():
+            messages.error(request, f"Ya has votado para el cargo de {cargo.nombre}.")
+        else:
+            # Si no ha votado, registrar el voto
+            Voto.objects.create(fecha=feVoto, candidato=candidato, cargo=cargo, votante=votante)
+            messages.success(request, f"Voto registrado exitosamente para el cargo de {cargo.nombre}.")
 
-    # Filtrar candidatos solo por el cargo seleccionado
-    candidatos = Candidato.objects.none()  # Iniciamos con un QuerySet vacío
-    if 'cargo' in request.GET:
-        cargo = request.GET['cargo']
-        candidatos = Candidato.objects.filter(cargo=cargo)
+        return redirect('crearVoto')  # Mantener en la página de crear voto
 
-    return render(request, 'crearVoto.html', {'candidatos': candidatos, 'cargos': cargos, 'votantes': votantes})
+    # Obtener los cargos disponibles para votar excluyendo aquellos ya votados por el votante
+    cargos_votados = Voto.objects.filter(votante=votante).values_list('cargo', flat=True)
+    cargos = Cargo.objects.exclude(id__in=cargos_votados)
+
+    # Filtrar candidatos solo por el cargo seleccionado si aún no se ha votado
+    candidatos = Candidato.objects.none()
+    if 'cargo' in request.GET and request.GET['cargo']:
+        cargo_id = request.GET['cargo']
+        if int(cargo_id) not in cargos_votados:
+            candidatos = Candidato.objects.filter(cargo_id=cargo_id)
+
+    # Pasar el nombre del votante al contexto para mostrarlo en la plantilla
+    context = {
+        'cargos': cargos,
+        'candidatos': candidatos,
+        'votante_nombre': f"{votante.nombre} {votante.apellido}",
+    }
+
+    return render(request, 'crearVoto.html', context)
 
 def votante_login(request):
     if request.method == 'POST':
-        username = request.POST.get('username')  
-        password = request.POST.get('password')  
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
         try:
             votante = Votante.objects.get(ci=username)
-        except Votante.DoesNotExist:
-            messages.error(request, 'Credenciales inválidas')
+        except Votante.DoesNotExist: 
+            messages.error(request, 'Usuario o contraseña incorrectos.')
             return render(request, 'login.html')
 
         # Verificar la contraseña
         if check_password(password, votante.password):
-            request.session['votante_id'] = votante.id  
-            messages.success(request, 'Inicio de sesión exitoso')
-            return redirect('inicio')  # Redirige a la página principal
+            # Verificar si el votante ya ha votado
+            if votante.ha_votado:
+                messages.warning(request, 'Ya has realizado tu voto y no puedes votar de nuevo.')
+                return redirect('inicio')  # Redirige al inicio si ya ha votado
+
+            # Iniciar sesión y redirigir a la página de votar
+            request.session['votante_id'] = votante.id
+            request.session['ha_votado'] = votante.ha_votado
+            messages.success(request, 'Inicio de sesión exitoso.')
+            return redirect('crearVoto')
         else:
-            messages.error(request, 'Credenciales inválidas')
+            messages.error(request, 'Usuario o contraseña incorrectos.')
             return render(request, 'login.html')
 
     return render(request, 'login.html')
-
-
-    
-    
-    
-    
-    

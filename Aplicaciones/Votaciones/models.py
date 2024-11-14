@@ -11,13 +11,13 @@ class Votante(AbstractBaseUser):
     email = models.EmailField(max_length=100, null=True)
     fechaNacimiento = models.DateTimeField(null=True)
     password = models.CharField(max_length=128, null=False, default='temporary_password')
+    ha_votado = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'ci'  # Define que el campo ci será el campo de login
+    USERNAME_FIELD = 'ci'
     REQUIRED_FIELDS = ['nombre', 'apellido', 'email']
 
     def __str__(self):
-        fila = "{0}: {1} - {2} - {3} - {4} - {5}"
-        return fila.format(self.id, self.nombre, self.apellido, self.email, self.fechaNacimiento)
+        return f"{self.id}: {self.nombre} - {self.apellido} - {self.email} - {self.fechaNacimiento}"
 
 # Modelo Cargo
 class Cargo(models.Model):
