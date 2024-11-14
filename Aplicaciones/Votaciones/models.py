@@ -1,6 +1,7 @@
 from django import forms
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import User
 
 # Modelo Votante
 class Votante(AbstractBaseUser):
@@ -54,5 +55,20 @@ class Voto(models.Model):
         fila = "{0}: {1} - {2} - {3}"
         return fila.format(self.id, self.fecha, self.votante, self.candidato)
     
+# Modelo administrador 
+class RegistroAdministradorForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        user.is_staff = True  # Marca al usuario como staff (administrador)
+        if commit:
+            user.save()
+        return user
 

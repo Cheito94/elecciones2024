@@ -69,19 +69,8 @@
             <a href="{% url 'inicio' %}" class="nav-item nav-link active">INICIO</a>
             <a href="{% url 'verCandidatos' %}" class="nav-item nav-link">Ver Candidatos</a>
             <a href="{% url 'verVotantes' %}" class="nav-item nav-link">Votantes</a>
-            
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Navegar</a>
-                <div class="dropdown-menu fade-down m-0">
-                    <a href="{% url 'listarCandidatos' %}" class="dropdown-item">Candidatos</a>
-                    <a href="{% url 'listarCargos' %}" class="dropdown-item">Cargos</a>
-                    <a href="{% url 'listarVotantes' %}" class="dropdown-item">Votantes</a>
-                    <a href="{% url 'listarVotos' %}" class="dropdown-item">Ver Votos</a>
-                    
-                </div>
-            </div>
         </div>
-        <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
+        <a href="{% url 'loginAdmin' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Iniciar Sesión<i class="fa fa-arrow-right ms-3"></i></a>
     </div>
 </nav>
 <!-- Navbar End -->
@@ -110,7 +99,7 @@
 
         <div class="col-lg-3 col-md-6">
             <h4 class="text-white mb-3">Oña Jonathan</h4>
-            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>1Saquísili, Barrio Centro</p>
+            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Saquísili, Barrio Centro</p>
             <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+593 98 457 3446</p>
             <p class="mb-2"><i class="fa fa-envelope me-3"></i>jonathan.ona@utc.edu.ec</p>
             <div class="d-flex pt-2">

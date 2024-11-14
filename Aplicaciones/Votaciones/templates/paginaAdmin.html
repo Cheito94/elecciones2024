@@ -1,0 +1,68 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+{% block body %}
+
+<br>
+<h1 class="text-center">Bienvenido Administrador</h1>
+<div class="text-center">
+    <a href="{% url 'inicio' %}" class="btn btn-outline-info"><i></i> Salir</a>
+</div>
+
+<br>
+<div class="container">
+    <div class="row text-center">
+        <div class="col-3">
+            <a href="{% url 'crearCargos' %}">
+                <img src="{% static 'img/agregar.png' %}" class="img-fluid" alt="Imagen Cargo">
+                <br><br>
+                <h4>Agregar Cargo</h4>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'crearCandidato' %}">
+                <img src="{% static 'img/anadir.png' %}" class="img-fluid" alt="Imagen Candidato">
+                <br><br>
+                <h4>Agregar Candidatos</h4>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'listarCargos' %}">
+                <img src="{% static 'img/cargos.png' %}" class="img-fluid" alt="Imagen Cargo">
+                <br><br>
+                <h4>Ver Cargos</h4>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'listarCandidatos' %}">
+                <img src="{% static 'img/candidato.png' %}" class="img-fluid" alt="Imagen Candidato">
+                <br><br>
+                <h4>Ver Candidatos</h4>
+            </a>
+        </div>
+    </div>
+</div>
+<br><br><br>
+<div class="container">
+    <div class="row text-center">    
+        <div class="col-6">
+            <a href="{% url 'listarVotos' %}">
+                <img src="{% static 'img/votosTotales.png' %}" class="img-fluid" alt="Imagen Votos">
+                <br><br>
+                <h4>Ver Votos</h4>
+            </a>
+        </div>
+        <div class="col-6">
+            <a href="{% url 'listarVotantes' %}">
+                <img src="{% static 'img/verVotos.png' %}" class="img-fluid" alt="Imagen Votantes">
+                <br><br>
+                <h4>Ver Votantes</h4>
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock %}
+
+
+
+        

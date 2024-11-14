@@ -1,0 +1,74 @@
+{% extends './plantilla.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Login de Administrador</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="frm_loginAdmin">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">Usuario</label>
+                            <input type="text" name="username" id="username" class="form-control" placeholder="Ingresa tu usuario" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="password">Contraseña</label>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
+                        </div>
+
+                        <!-- Mostrar mensaje de error de forma más genérica -->
+                        {% if error %}
+                            <div class="alert alert-danger mt-3">
+                                <p>{{ error }}</p>
+                            </div>
+                        {% endif %}
+
+                        <!-- Agregar espacio para mostrar errores globales (si los hay) -->
+                        {% if messages %}
+                            <div class="alert alert-danger mt-3">
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Ingresar</button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'registroAdmin' %}" class="btn btn-outline-secondary">Registrar</a>
+                        &nbsp;&nbsp;
+                        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#frm_loginAdmin").validate({
+        rules: {
+            username: {
+                required: true,
+            },
+            password: {
+                required: true,
+                minlength: 3 // Corregido "minlenght" a "minlength"
+            },
+        },
+        messages: {
+            username: {
+                required: "Por favor ingrese el usuario",
+            },
+            password: {
+                required: "Por favor ingrese la contraseña",
+            }
+        }
+    });
+</script>
+{% endblock %}
