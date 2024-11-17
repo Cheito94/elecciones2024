@@ -7,15 +7,11 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
-<<<<<<< HEAD
 from django.contrib.auth.hashers import check_password
-
-=======
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth import login
->>>>>>> c34e202068f02c6a81ffe02b8cf119129356820e
 # Create your views here.
 def inicio(request):
     return render(request, 'inicio.html')
