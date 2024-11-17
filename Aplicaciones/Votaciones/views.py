@@ -210,15 +210,12 @@ def votante_login(request):
 #------------------------------ADMINISTRADOR------------------------------
 def registro_administrador(request):
     if request.method == 'POST':
-        # Recoger los datos enviados en el formulario
         username = request.POST.get('username')
         password = request.POST.get('password')
         password_confirm = request.POST.get('password_confirm')
-        
-        # Lista para almacenar los errores
+    
         errors = []
 
-        # Validaciones
         if not username or not password or not password_confirm:
             errors.append('Todos los campos son obligatorios.')
         elif password != password_confirm:
@@ -241,6 +238,7 @@ def registro_administrador(request):
         return render(request, 'registroAdmin.html', {'errors': errors})
     
     return render(request, 'registroAdmin.html')
+
 # Login de administrador
 def login_administrador(request):
     if request.method == 'POST':
@@ -271,3 +269,12 @@ def logout_administrador(request):
     logout(request)
     return redirect('loginAdmin') 
 
+def listadoAdmin(request):
+    administradores = User.objects.filter(is_staff=True)
+    return render(request, 'listarAdmin.html', {'administradores': administradores})
+
+def eliminar_admin(request, admin_id):
+    administrador = get_object_or_404(User, id=admin_id)
+    administrador.delete()
+    messages.success(request, f'Administrador {administrador.username} eliminado exitosamente.')
+    return redirect('listarAdmin')

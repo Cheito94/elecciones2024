@@ -39,5 +39,7 @@ urlpatterns = [
     path('login_admin/', views.login_administrador, name='loginAdmin'),
     path('pagina_admin/', views.pagina_administrador, name='paginaAdmin'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('listadoAdmin/', views.listadoAdmin, name='listarAdmin'),
+    path('eliminarAdmin/<int:admin_id>/', views.eliminar_admin, name='eliminarAdmin'),
 
     ]
