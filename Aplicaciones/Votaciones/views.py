@@ -12,7 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth import login
-# Create your views here.
+
+# Create your views here.z
 def inicio(request):
     return render(request, 'inicio.html')
 
@@ -269,4 +270,4 @@ def pagina_administrador(request):
 def logout_administrador(request):
     logout(request)
     return redirect('loginAdmin') 
->>>>>>> c34e202068f02c6a81ffe02b8cf119129356820e
+
