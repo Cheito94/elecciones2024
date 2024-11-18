@@ -1,0 +1,46 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+    <h2 class="text-center">Listas</h2>
+    <div class="text-center">
+        <a href="{% url 'crearLista' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Agregar</a>
+        <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
+    </div>
+    <br>
+    <div class="row text-center">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Color</th>
+                    <th>Número</th>
+                    <th>Mascota</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lista in listas %}
+                    <tr>
+                        <td>{{ lista.nombre }}</td>
+                        <td>{{ lista.color }}</td>
+                        <td>{{ lista.numero }}</td>
+                        <td>
+                            {% if lista.foto %}
+                                <img src="{{ lista.foto.url }}" alt="Foto de {{ lista.nombre }}" style="width: 100px; height: 100px;">
+                            {% else %}
+                                No hay foto disponible
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No hay listas disponibles.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

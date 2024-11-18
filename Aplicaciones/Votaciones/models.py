@@ -55,20 +55,15 @@ class Voto(models.Model):
         fila = "{0}: {1} - {2} - {3}"
         return fila.format(self.id, self.fecha, self.votante, self.candidato)
     
-# Modelo administrador 
-class RegistroAdministradorForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'password']
-        widgets = {
-            'password': forms.PasswordInput(),
-        }
+#----------------------Modelo Listas---------------------------
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data['password'])
-        user.is_staff = True  # Marca al usuario como staff (administrador)
-        if commit:
-            user.save()
-        return user
+class Lista(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100, null=True)
+    color = models.CharField(max_length=50, null=True)
+    numero = models.CharField(max_length=25, null=True)
+    foto = models.FileField(upload_to='fotoLista' ,null=True,blank=True)
 
+    def __str__(self):
+        fila = "{0}: {1} - {2} - {3}"
+        return fila.format(self.id, self.nombre, self.nombre, self.color)

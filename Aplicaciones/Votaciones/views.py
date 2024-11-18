@@ -1,5 +1,5 @@
 from typing import Counter
-from . models import Cargo, Votante, Candidato, Voto
+from . models import Cargo, Votante, Candidato, Voto, Lista
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth import login
+
 
 # Create your views here.z
 def inicio(request):
@@ -278,3 +279,24 @@ def eliminar_admin(request, admin_id):
     administrador.delete()
     messages.success(request, f'Administrador {administrador.username} eliminado exitosamente.')
     return redirect('listarAdmin')
+
+
+#----------------Listas-------------------
+def verListas(request):
+    listas = Lista.objects.all()
+    return render(request, 'verListas.html', {'listas': listas})
+
+def crearLista(request):
+    if request.method == 'POST':
+        nom = request.POST['nombre']
+        col = request.POST['color']
+        num = request.POST['numero']
+        fot = request.FILES.get('foto')
+        if Lista.objects.filter(nombre=nom).exists():
+            messages.error(request, 'Ya existe una Lista con este nombre')
+            return render(request, 'crearLista.html')
+        nuevoLista = Lista.objects.create(nombre=nom,color=col,numero=num,foto=fot)
+        messages.success(request, 'Lista guardado con éxito')
+        return redirect('verListas')
+    return render(request, 'crearLista.html')
+

@@ -26,6 +26,11 @@ urlpatterns = [
     path('editarCandidato/<int:id>/', views.editarCandidato, name='editarCandidato'),
     path('eliminarCandidato/<int:id>/', views.eliminarCandidato, name='eliminarCandidato'),
 
+    #---------------------LISTAS------------------------------
+    path('verListas/', views.verListas, name='verListas'),
+    path('crearLista/', views.crearLista, name='crearLista'),
+    
+
     #----------VOTO----------
     path('listarVotos/', views.listarVotos, name='listarVotos'),
     path('crearVoto/', views.crearVoto, name='crearVoto'),
