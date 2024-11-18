@@ -26,12 +26,13 @@ urlpatterns = [
     path('editarCandidato/<int:id>/', views.editarCandidato, name='editarCandidato'),
     path('eliminarCandidato/<int:id>/', views.eliminarCandidato, name='eliminarCandidato'),
 
-    #---------------------LISTAS------------------------------
+    #-------------------------------------LISTAS-----------------------------------------------------------
     path('verListas/', views.verListas, name='verListas'),
     path('crearLista/', views.crearLista, name='crearLista'),
-    
+    path('editarLista/<int:lista_id>/', views.editarLista, name='editarLista'),
+    path('eliminarLista/<int:lista_id>/', views.eliminarLista, name='eliminarLista'),
 
-    #----------VOTO----------
+    #--------------------------------------VOTO------------------------------------------------------------
     path('listarVotos/', views.listarVotos, name='listarVotos'),
     path('crearVoto/', views.crearVoto, name='crearVoto'),
     

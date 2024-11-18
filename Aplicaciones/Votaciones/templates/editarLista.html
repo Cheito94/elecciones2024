@@ -1,0 +1,94 @@
+{% extends "./plantilla.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <br>
+            <h2 style="text-align: center;">Editar Lista</h2>
+            <div>
+                <!-- Bloque para mostrar mensajes -->
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <form action="{% url 'editarLista' lista.id %}" method="POST" enctype="multipart/form-data" id="frm_editar_lista">
+                    {% csrf_token %}
+                    
+                    <label for="nombre">Nombre de la Lista:</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" value="{{ lista.nombre }}" required>
+                    <br>
+                    
+                    <label for="color">Color de la Lista:</label>
+                    <input type="text" name="color" id="color" class="form-control" value="{{ lista.color }}" required>
+                    <br>
+                    
+                    <label for="numero">Número de la Lista:</label>
+                    <input type="text" name="numero" id="numero" class="form-control" value="{{ lista.numero }}" required>
+                    <br>
+                    
+                    <label for="foto">Foto de la Lista:</label>
+                    {% if lista.foto %}
+                        <div>
+                            <img src="{{ lista.foto.url }}" alt="Foto de la lista" class="img-fluid" style="max-width: 200px;">
+                            <br><br>
+                            <p>Si desea cambiar la foto, elija un archivo nuevo:</p>
+                        </div>
+                    {% else %}
+                        <p>No hay foto para esta lista.</p>
+                    {% endif %}
+                    <input type="file" name="foto" id="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                    <br>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'verListas' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                    </div>
+                </form>
+                <br><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#frm_editar_lista").validate({
+        rules: {
+            nombre: {
+                required: true,
+                minlength: 3
+            },
+            color: {
+                required: true,
+                minlength: 3
+            },
+            numero: {
+                required: true,
+                number: true
+            }
+        },
+        messages: {
+            nombre: {
+                required: "Por favor ingrese el nombre de la lista",
+                minlength: "El nombre de la lista debe tener al menos 3 letras"
+            },
+            color: {
+                required: "Por favor ingrese el color de la lista",
+                minlength: "El color debe tener al menos 3 letras"
+            },
+            numero: {
+                required: "Por favor ingrese el número de la lista",
+                number: "Ingrese un número válido"
+            }
+        }
+    });
+</script>
+{% endblock %}

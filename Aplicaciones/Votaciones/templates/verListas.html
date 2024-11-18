@@ -17,6 +17,7 @@
                     <th>Color</th>
                     <th>Número</th>
                     <th>Mascota</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,12 +33,18 @@
                                 No hay foto disponible
                             {% endif %}
                         </td>
+                        <td>
+                            <a href="{% url 'editarLista' lista.id %}" class="btn btn-success">Editar</a>
+                            <a href="{% url 'eliminarLista' lista.id %}" class="btn btn-danger" onclick="return confirm('Esta seguro de eliminar esta lista')">Eliminar</a>
+                        </td>
+
                     </tr>
                 {% empty %}
                     <tr>
                         <td colspan="4">No hay listas disponibles.</td>
                     </tr>
                 {% endfor %}
+
             </tbody>
         </table>
     </div>

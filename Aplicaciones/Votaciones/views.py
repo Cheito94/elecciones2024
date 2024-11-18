@@ -286,6 +286,7 @@ def verListas(request):
     listas = Lista.objects.all()
     return render(request, 'verListas.html', {'listas': listas})
 
+# Crear
 def crearLista(request):
     if request.method == 'POST':
         nom = request.POST['nombre']
@@ -299,4 +300,24 @@ def crearLista(request):
         messages.success(request, 'Lista guardado con éxito')
         return redirect('verListas')
     return render(request, 'crearLista.html')
+
+#Actualizar
+def editarLista(request, lista_id):
+    lista = get_object_or_404(Lista, id=lista_id)  # Obtenemos la lista por ID
+    if request.method == 'POST':
+        lista.nombre = request.POST['nombre']
+        lista.color = request.POST['color']
+        lista.numero = request.POST['numero']
+        if 'foto' in request.FILES:
+            lista.foto = request.FILES['foto']
+        lista.save()
+        messages.success(request, 'Lista actualizada con éxito')
+        return redirect('verListas')  # Redirige a la vista de listas
+    return render(request, 'editarLista.html', {'lista': lista})
+
+def eliminarLista(request, lista_id):
+    lista = get_object_or_404(Lista, id=lista_id)
+    lista.delete()
+    messages.success(request, 'Lista eliminada con éxito')
+    return redirect('verListas')
 
