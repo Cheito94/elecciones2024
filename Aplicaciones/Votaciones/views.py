@@ -47,7 +47,10 @@ def votos_por_cargo(request):
         'votos_por_cargo': votos_por_cargo,
     }
 
-    return render(request, 'votos_por_cargo.html', context)A
+    return render(request, 'votos_por_cargo.html', context)
+
+
+
 #----------------Listas-------------------
 def verListas(request):
     listas = Lista.objects.all()
