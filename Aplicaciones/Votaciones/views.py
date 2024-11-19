@@ -17,6 +17,37 @@ from django.contrib.auth import login
 def inicio(request):
     return render(request, 'inicio.html')
 
+# ------------------VOTOS POR CARGO---------------------
+def votos_por_cargo(request):
+    # Obtener todos los cargos, sin filtrar por votos
+    cargos = Cargo.objects.all()
+
+    votos_por_cargo = []
+    for cargo in cargos:
+        # Obtener todos los candidatos asociados a este cargo
+        candidatos = Candidato.objects.filter(cargo=cargo)
+        
+        # Crear una lista para almacenar los votos por candidato
+        candidatos_con_votos = []
+        
+        for candidato in candidatos:
+            # Contar el número de votos para cada candidato
+            num_votos = Voto.objects.filter(candidato=candidato).count()
+            candidatos_con_votos.append({
+                'candidato': candidato,
+                'num_votos': num_votos,
+            })
+
+        votos_por_cargo.append({
+            'cargo': cargo,
+            'candidatos': candidatos_con_votos,
+        })
+
+    context = {
+        'votos_por_cargo': votos_por_cargo,
+    }
+
+    return render(request, 'votos_por_cargo.html', context)A
 #----------------Listas-------------------
 def verListas(request):
     listas = Lista.objects.all()
