@@ -8,31 +8,71 @@
 </div>
 <br>
 <div class="text-center">
-    <a href="{% url 'crearCargos' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Crear Cargo</a>
+    <a href="{% url 'crearCargo' %}" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear Cargo</a>
+    &nbsp;&nbsp;
+    <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
 </div>
 <div class="container">
     <table class="table table-borderd table-striped table-hover" id="tbl-cargos">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Cargo</th>
+                <th>Nombre y Apellido</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for cargo in cargos %}
             <tr>
-                <td>{{ cargo.id }}</td>
+                <td>{{ cargo.cargo }}</td>
                 <td>{{ cargo.nombre }}</td>
-                <td>   
-                    <a href="{% url 'eliminarCargos' cargo.id %}" onclick="return confirm('¿Está seguro que desea eliminar este cargo?')" class="btn btn-danger">Eliminar</a>
+                <td>
+                    <a href="{% url 'editarCargo' cargo.id %}" class="btn btn-warning">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>  
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'eliminarCargo' cargo.id %}">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-    <script>
-        let table = new DataTable('#tbl-cargos');
-    </script>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que desea eliminar esta candidato con su cargo?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a href="#" id="confirmDeleteButton" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de eliminación -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var deleteModal = document.getElementById('confirmDeleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var deleteUrl = button.getAttribute('data-delete-url');
+            var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            confirmDeleteButton.setAttribute('href', deleteUrl);
+        });
+    });
+</script>
+
+<script>
+    let table = new DataTable('#tbl-cargos');
+</script>
+
 {% endblock %}

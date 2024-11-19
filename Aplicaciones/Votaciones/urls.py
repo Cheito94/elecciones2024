@@ -10,24 +10,19 @@ urlpatterns = [
 
     #----------CARGO----------
     path('listarCargos/', views.listarCargos, name='listarCargos'),
-    path('crearCargos/', views.crearCargos, name='crearCargos'),
-    path('eliminarCargos/<int:id>/', views.eliminarCargos, name='eliminarCargos'),
+    path('crearCargo/', views.crearCargo, name='crearCargo'),
+    path('editarCargo/<int:id>/', views.editarCargo, name='editarCargo'),
+    path('eliminarCargo/<int:id>/', views.eliminarCargo, name='eliminarCargo'),
 
     #----------VOTANTE----------
     path('listarVotantes/', views.listarVotantes, name='listarVotantes'),
     path('verVotantes/', views.verVotantes, name='verVotantes'),
     path('crearVotante/', views.crearVotante, name='crearVotante'),
-    path('eliminarVotantes/<int:id>/', views.eliminarVotantes, name='eliminarVotantes'),    
-
-    #----------CANDIDATO----------
-    path('listarCandidatos/', views.listarCandidatos, name='listarCandidatos'),
-    path('verCandidatos/', views.verCandidatos, name='verCandidatos'),
-    path('crearCandidato/', views.crearCandidato, name='crearCandidato'),
-    path('editarCandidato/<int:id>/', views.editarCandidato, name='editarCandidato'),
-    path('eliminarCandidato/<int:id>/', views.eliminarCandidato, name='eliminarCandidato'),
+    path('eliminarVotante/<int:id>/', views.eliminarVotante, name='eliminarVotante'),    
 
     #-------------------------------------LISTAS-----------------------------------------------------------
     path('verListas/', views.verListas, name='verListas'),
+    path('listarListas/', views.listarListas, name='listarListas'),
     path('crearLista/', views.crearLista, name='crearLista'),
     path('editarLista/<int:lista_id>/', views.editarLista, name='editarLista'),
     path('eliminarLista/<int:lista_id>/', views.eliminarLista, name='eliminarLista'),
@@ -35,8 +30,7 @@ urlpatterns = [
     #--------------------------------------VOTO------------------------------------------------------------
     path('listarVotos/', views.listarVotos, name='listarVotos'),
     path('crearVoto/', views.crearVoto, name='crearVoto'),
-    
-    
+
     path('login/', views.votante_login, name='login'),
 
     #-------ADMINISTRADOR------------

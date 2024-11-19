@@ -1,5 +1,5 @@
 from typing import Counter
-from . models import Cargo, Votante, Candidato, Voto, Lista
+from . models import Cargo, Votante, Voto, Lista
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -13,25 +13,81 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth import login
 
-
 # Create your views here.z
 def inicio(request):
     return render(request, 'inicio.html')
+
+#----------------Listas-------------------
+def verListas(request):
+    listas = Lista.objects.all()
+    return render(request, 'verListas.html', {'listas': listas})
+
+def listarListas(request):
+    listas = Lista.objects.all()
+    return render(request, 'listarListas.html', {'listas': listas})
+
+def crearLista(request):
+    if request.method == 'POST':
+        nom = request.POST['nombre']
+        col = request.POST['color']
+        num = request.POST['numero']
+        fot = request.FILES.get('foto')
+        if Lista.objects.filter(nombre=nom).exists():
+            messages.error(request, 'Ya existe una Lista con este nombre')
+            return render(request, 'crearLista.html')
+        nuevoLista = Lista.objects.create(nombre=nom,color=col,numero=num,foto=fot)
+        messages.success(request, 'Lista guardado con éxito')
+        return redirect('listarListas')
+    return render(request, 'crearLista.html')
+
+def editarLista(request, lista_id):
+    lista = get_object_or_404(Lista, id=lista_id)  # Obtenemos la lista por ID
+    if request.method == 'POST':
+        lista.nombre = request.POST['nombre']
+        lista.color = request.POST['color']
+        lista.numero = request.POST['numero']
+        if 'foto' in request.FILES:
+            lista.foto = request.FILES['foto']
+        lista.save()
+        messages.success(request, 'Lista actualizada con éxito')
+        return redirect('listarListas')  # Redirige a la vista de listas
+    return render(request, 'editarLista.html', {'lista': lista})
+
+def eliminarLista(request, lista_id):
+    lista = get_object_or_404(Lista, id=lista_id)
+    lista.delete()
+    messages.success(request, 'Lista eliminada con éxito')
+    return redirect('listarListas')
 
 #----------CARGO----------
 def listarCargos(request):
     cargos = Cargo.objects.all()
     return render(request, 'listarCargos.html', {'cargos': cargos})
 
-def crearCargos(request):
+def crearCargo(request):
     if request.method == 'POST':
-        nom = request.POST['nombre']
-        nuevoCargo = Cargo.objects.create(nombre=nom)
-        messages.success(request, 'Cargo guardado con éxito')
-        return redirect('listarCargos')
+        car = request.POST.get('cargo')
+        nom = request.POST.get('nombre')
+        if car and nom:
+            Cargo.objects.create(cargo=car, nombre=nom)
+            messages.success(request, 'Candidato guardado con éxito')
+            return redirect('listarCargos')
     return render(request, 'crearCargos.html')
 
-def eliminarCargos(request, id):
+def editarCargo(request, id):  # Cambié la vista para que reciba 'id' como argumento
+    cargo = get_object_or_404(Cargo, id=id)  # Obtenemos el objeto Cargo basado en el id
+    if request.method == 'POST':
+        car = request.POST.get('cargo')
+        nom = request.POST.get('nombre')
+        if car and nom:
+            cargo.cargo = car
+            cargo.nombre = nom
+            cargo.save()  # Agregué los paréntesis a save para que guarde el cambio
+            messages.success(request, 'Candidato actualizado con éxito')
+            return redirect('listarCargos')
+    return render(request, 'editarCargo.html', {'cargo': cargo})
+    
+def eliminarCargo(request, id):
     cargoEliminar = get_object_or_404(Cargo, id=id)
     cargoEliminar.delete()
     messages.success(request, 'Cargo eliminado con éxito')
@@ -58,83 +114,19 @@ def crearVotante(request):
         if Votante.objects.filter(ci=ced).exists():
             messages.error(request, 'Ya existe un votante con esta cédula.')
             return render(request, 'crearVotante.html')
-        
-        # Crea el nuevo votante, guardando la contraseña encriptada
         nuevoVotante = Votante.objects.create(
-            ci=ced,
-            nombre=nom,
-            apellido=apell,
-            email=corr,
-            fechaNacimiento=fechNac,
-            password=make_password(password)  # Encriptar y guardar la contraseña
-        )
+            ci=ced, nombre=nom, apellido=apell, email=corr, fechaNacimiento=fechNac, password=make_password(password))
         messages.success(request, 'Votante guardado con éxito')
         return redirect('verVotantes')
-    
     return render(request, 'crearVotante.html')
                                             
-def eliminarVotantes(request, id):
+def eliminarVotante(request, id):
     votanteEliminar = get_object_or_404(Votante, id=id)
     votanteEliminar.delete()
     messages.success(request, 'Votante eliminado con éxito')
     return redirect('listarVotantes')
 
-#----------CANDIDATO----------
-def listarCandidatos(request):
-    candidatos = Candidato.objects.all()
-    return render(request, 'listarCandidatos.html', {'candidatos': candidatos})
-
-def verCandidatos(request):
-    # Obtener todos los cargos únicos
-    cargos = Candidato.objects.values_list('cargo__nombre', flat=True).distinct()
-    # Crear un diccionario de candidatos agrupados por cargo
-    candidatos_por_cargo = {cargo: Candidato.objects.filter(cargo__nombre=cargo) for cargo in cargos}
-    
-    return render(request, 'verCandidatos.html', {'candidatos_por_cargo': candidatos_por_cargo})
-
-def crearCandidato(request):
-    if request.method == 'POST':
-        ced = request.POST['ci']
-        nom = request.POST['nombre']
-        apell = request.POST['apellido']
-        carg = request.POST['cargo']
-        corr = request.POST['email']
-        fot = request.FILES.get('foto')
-        if Candidato.objects.filter(ci=ced).exists():
-            messages.error(request, 'Ya existe un candidato con esta cédula.')
-            return render(request, 'crearCandidato.html')
-        cargo = Cargo.objects.get(id=carg)
-        nuevoCandidato = Candidato.objects.create(ci=ced, nombre=nom, apellido=apell, email=corr, foto=fot, cargo=cargo)
-        messages.success(request, 'Candidato guardado con éxito')
-        return redirect('listarCandidatos')
-    cargos = Cargo.objects.all()
-    return render(request, 'crearCandidato.html', {'cargos': cargos})
-
-def editarCandidato(request, id):
-    candidato = get_object_or_404(Candidato, id=id)
-    if request.method == 'POST':
-        candidato.ci = request.POST['ci']
-        candidato.nombre = request.POST['nombre']
-        candidato.apellido = request.POST['apellido']
-        cargo_id = request.POST['cargo']
-        candidato.cargo = get_object_or_404(Cargo, id=cargo_id)
-        candidato.email = request.POST['email']
-        candidato.foto = request.FILES.get('foto')
-        candidato.save()
-        messages.success(request, 'Candidato editado con éxito')
-        return redirect('listarCandidatos')
-    cargos = Cargo.objects.all()
-    return render(request, 'editarCandidato.html', {'candidato': candidato, 'cargos': cargos})
-        
-    
-def eliminarCandidato(request, id):
-    candidatoEliminar = get_object_or_404(Candidato, id=id)
-    candidatoEliminar.delete()
-    messages.success(request, 'Candidato eliminado con éxito')
-    return redirect('listarCandidatos')
-
 #----------VOTO----------
-
 def listarVotos(request):
     votos = Voto.objects.all()
     return render(request, 'listarVotos.html', {'votos': votos})
@@ -147,8 +139,6 @@ def crearVoto(request):
         candidato_id = request.POST['candidato']
         feVoto = request.POST['fecha']
         cargo_id = request.POST['cargo']
-
-        candidato = get_object_or_404(Candidato, id=candidato_id)
         cargo = get_object_or_404(Cargo, id=cargo_id)
 
         # Verificar si el votante ya ha votado para el cargo seleccionado
@@ -156,7 +146,7 @@ def crearVoto(request):
             messages.error(request, f"Ya has votado para el cargo de {cargo.nombre}.")
         else:
             # Si no ha votado, registrar el voto
-            Voto.objects.create(fecha=feVoto, candidato=candidato, cargo=cargo, votante=votante)
+            Voto.objects.create(fecha=feVoto, cargo=cargo, votante=votante)
             messages.success(request, f"Voto registrado exitosamente para el cargo de {cargo.nombre}.")
 
         return redirect('crearVoto')  # Mantener en la página de crear voto
@@ -164,23 +154,7 @@ def crearVoto(request):
     # Obtener los cargos disponibles para votar excluyendo aquellos ya votados por el votante
     cargos_votados = Voto.objects.filter(votante=votante).values_list('cargo', flat=True)
     cargos = Cargo.objects.exclude(id__in=cargos_votados)
-
-    # Filtrar candidatos solo por el cargo seleccionado si aún no se ha votado
-    candidatos = Candidato.objects.none()
-    if 'cargo' in request.GET and request.GET['cargo']:
-        cargo_id = request.GET['cargo']
-        if int(cargo_id) not in cargos_votados:
-            candidatos = Candidato.objects.filter(cargo_id=cargo_id)
-
-    # Pasar el nombre del votante al contexto para mostrarlo en la plantilla
-    context = {
-        'cargos': cargos,
-        'candidatos': candidatos,
-        'votante_nombre': f"{votante.nombre} {votante.apellido}",
-    }
-
-    return render(request, 'crearVoto.html', context)
-
+    
 def votante_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -198,7 +172,6 @@ def votante_login(request):
             if votante.ha_votado:
                 messages.warning(request, 'Ya has realizado tu voto y no puedes votar de nuevo.')
                 return redirect('inicio')  # Redirige al inicio si ya ha votado
-
             # Iniciar sesión y redirigir a la página de votar
             request.session['votante_id'] = votante.id
             request.session['ha_votado'] = votante.ha_votado
@@ -280,44 +253,4 @@ def eliminar_admin(request, admin_id):
     messages.success(request, f'Administrador {administrador.username} eliminado exitosamente.')
     return redirect('listarAdmin')
 
-
-#----------------Listas-------------------
-def verListas(request):
-    listas = Lista.objects.all()
-    return render(request, 'verListas.html', {'listas': listas})
-
-# Crear
-def crearLista(request):
-    if request.method == 'POST':
-        nom = request.POST['nombre']
-        col = request.POST['color']
-        num = request.POST['numero']
-        fot = request.FILES.get('foto')
-        if Lista.objects.filter(nombre=nom).exists():
-            messages.error(request, 'Ya existe una Lista con este nombre')
-            return render(request, 'crearLista.html')
-        nuevoLista = Lista.objects.create(nombre=nom,color=col,numero=num,foto=fot)
-        messages.success(request, 'Lista guardado con éxito')
-        return redirect('verListas')
-    return render(request, 'crearLista.html')
-
-#Actualizar
-def editarLista(request, lista_id):
-    lista = get_object_or_404(Lista, id=lista_id)  # Obtenemos la lista por ID
-    if request.method == 'POST':
-        lista.nombre = request.POST['nombre']
-        lista.color = request.POST['color']
-        lista.numero = request.POST['numero']
-        if 'foto' in request.FILES:
-            lista.foto = request.FILES['foto']
-        lista.save()
-        messages.success(request, 'Lista actualizada con éxito')
-        return redirect('verListas')  # Redirige a la vista de listas
-    return render(request, 'editarLista.html', {'lista': lista})
-
-def eliminarLista(request, lista_id):
-    lista = get_object_or_404(Lista, id=lista_id)
-    lista.delete()
-    messages.success(request, 'Lista eliminada con éxito')
-    return redirect('verListas')
 

@@ -1,0 +1,93 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+
+<br>
+<div class="container">
+    <h2 class="text-center">Listas</h2>
+    <div class="text-center mb-4">
+        <a href="{% url 'crearLista' %}" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear Lista</a>
+        &nbsp;&nbsp;
+        <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
+    </div>
+    <div class="row">
+        {% for lista in listas %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-center">
+                        <h5 class="card-title">{{ lista.nombre }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th>Color</th>
+                                    <th>Número</th>
+                                    <th>Mascota</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ lista.color }}</td>
+                                    <td>{{ lista.numero }}</td>
+                                    <td>
+                                        {% if lista.foto %}
+                                            <img src="{{ lista.foto.url }}" alt="Foto de {{ lista.nombre }}" style="width: 100px; height: 100px;">
+                                        {% else %}
+                                            No hay foto disponible
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{% url 'editarLista' lista.id %}" class="btn btn-warning">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'eliminarLista' lista.id %}">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-warning" role="alert">
+                No hay listas disponibles.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que desea eliminar esta candidato con su cargo?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a href="#" id="confirmDeleteButton" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de eliminación -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var deleteModal = document.getElementById('confirmDeleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var deleteUrl = button.getAttribute('data-delete-url');
+            var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            confirmDeleteButton.setAttribute('href', deleteUrl);
+        });
+    });
+</script>
+
+
+{% endblock %}

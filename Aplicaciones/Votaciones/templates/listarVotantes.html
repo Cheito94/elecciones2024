@@ -7,6 +7,10 @@
     </div>
 </div>
 <br>
+<div class="text-center">
+    <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
+</div>
+    
 <div class="container">
     <table class="table table-borderd table-striped" id="tbl-votantes">
         <thead>
@@ -31,13 +35,51 @@
                 <td>{{ votante.fechaNacimiento }}</td>
 
                 <td>   
-                    <a href="{% url 'eliminarVotantes' votante.id %}" onclick="return confirm('¿Está seguro que desea eliminar este votante?')" class="btn btn-danger">Eliminar</a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'eliminarVotante' votante.id %}">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que desea eliminar este votante?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a href="#" id="confirmDeleteButton" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script de eliminación -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var deleteModal = document.getElementById('confirmDeleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var deleteUrl = button.getAttribute('data-delete-url');
+            var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            confirmDeleteButton.setAttribute('href', deleteUrl);
+        });
+    });
+</script>
+
+
+
+
+
 <script>
     let table = new DataTable('#tbl-votantes');
 </script>
