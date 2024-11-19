@@ -182,6 +182,8 @@ def votante_login(request):
             return render(request, 'login.html')
 
 #------------------------------ADMINISTRADOR------------------------------
+
+# Registro del administrador
 def registro_administrador(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -197,18 +199,14 @@ def registro_administrador(request):
         elif User.objects.filter(username=username).exists():
             errors.append('El nombre de usuario ya existe.')
 
-        # Si no hay errores, crear al usuario
         if not errors:
             user = User.objects.create_user(username=username, password=password)
-            user.is_staff = True  # Asegura que es un administrador
+            user.is_staff = True  # Marcar como administrador
             user.save()
             
-            # Iniciar sesión automáticamente después de registrar
             login(request, user)
             
-            return redirect('loginAdmin')  # Redirige al login del administrador
-        
-        # Si hay errores, volver a mostrar el formulario con los errores
+            return redirect('loginAdmin')
         return render(request, 'registroAdmin.html', {'errors': errors})
     
     return render(request, 'registroAdmin.html')
@@ -219,38 +217,45 @@ def login_administrador(request):
         username = request.POST['username']
         password = request.POST['password']
         
-        # Autenticar al usuario
         user = authenticate(request, username=username, password=password)
         
-        if user is not None and user.is_staff:  # Verificar que el usuario es un administrador
+        if user is not None and user.is_staff: 
             login(request, user)
-            return redirect('paginaAdmin')  # Redirigir al dashboard de administrador o página específica
+            return redirect('paginaAdmin')  
         else:
-            # Si las credenciales no son válidas o no es un administrador
             messages.error(request, 'Credenciales no válidas o no tienes permisos de administrador.')
 
     return render(request, 'loginAdmin.html')
-    
-@login_required
+
 def pagina_administrador(request):
-    # Verificar si el usuario tiene permisos de administrador
-    if request.user.is_staff or (hasattr(request.user, 'is_staff') and request.user.is_admin):
-        return render(request, 'paginaAdmin.html')  # Renderiza la página exclusiva del admin
+    if request.user.is_staff:  
+        return render(request, 'paginaAdmin.html')  
     else:
-        return redirect('loginAdmin')  # Redirige al login si no es admin
+        messages.error(request, 'No tienes permiso para acceder a esta página.')  
+        return redirect('loginAdmin')
 
 def logout_administrador(request):
     logout(request)
-    return redirect('loginAdmin') 
+    return redirect('loginAdmin')
 
+@login_required
 def listadoAdmin(request):
-    administradores = User.objects.filter(is_staff=True)
-    return render(request, 'listarAdmin.html', {'administradores': administradores})
+    if request.user.is_staff:
+        administradores = User.objects.filter(is_staff=True)
+        return render(request, 'listarAdmin.html', {'administradores': administradores})
+    else:
+        messages.error(request, 'No tienes permiso para acceder a esta página.')
+        return redirect('loginAdmin')
 
+
+@login_required
 def eliminar_admin(request, admin_id):
-    administrador = get_object_or_404(User, id=admin_id)
-    administrador.delete()
-    messages.success(request, f'Administrador {administrador.username} eliminado exitosamente.')
-    return redirect('listarAdmin')
-
+    if request.user.is_staff:
+        administrador = get_object_or_404(User, id=admin_id)
+        administrador.delete()
+        messages.success(request, f'Administrador {administrador.username} eliminado exitosamente.')
+        return redirect('listarAdmin')
+    else:
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('loginAdmin')
 
