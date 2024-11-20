@@ -1,0 +1,60 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<br>
+<div class="card">
+    <div class="card-title text-center">
+        <h3><b>CANDIDATOS</b></h3>
+        <h3><b>Por Elegir</b></h3>
+
+    </div>
+</div>
+<br>
+<div class="text-center">
+    <!-- Ajustamos el URL para redirigir al login -->
+    <a href="{% url 'login' %}" class="btn btn-outline-info">
+        <i class="fas fa-plus"></i> Realizar Voto
+    </a>
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        {% for cargo, candidatos in candidatos_por_cargo.items %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-center">
+                        <h4>{{ cargo }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th>CI</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Foto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for candidato in candidatos %}
+                                    <tr>
+                                        <td>{{ candidato.ci }}</td>
+                                        <td>{{ candidato.nombre }}</td>
+                                        <td>{{ candidato.apellido }}</td>
+                                        <td>
+                                            {% if candidato.foto %}
+                                                <img src="{{ candidato.foto.url }}" alt="Foto del candidato" class="img-fluid" style="max-height: 100px;">
+                                            {% else %}
+                                                No hay foto disponible
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

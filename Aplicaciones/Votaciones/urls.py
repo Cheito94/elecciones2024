@@ -45,4 +45,5 @@ urlpatterns = [
     path('listadoAdmin/', views.listadoAdmin, name='listarAdmin'),
     path('eliminarAdmin/<int:admin_id>/', views.eliminar_admin, name='eliminarAdmin'),
 
+
     ]
