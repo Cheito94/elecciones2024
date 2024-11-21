@@ -8,15 +8,6 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('',views.inicio, name='inicio'),
 
-    #----------VOTOS POR CARGO----------
-    path('votos-por-cargo/', views.votos_por_cargo, name='votos_por_cargo'),
-
-    #----------CARGO----------
-    path('listarCargos/', views.listarCargos, name='listarCargos'),
-    path('crearCargo/', views.crearCargo, name='crearCargo'),
-    path('editarCargo/<int:id>/', views.editarCargo, name='editarCargo'),
-    path('eliminarCargo/<int:id>/', views.eliminarCargo, name='eliminarCargo'),
-
     #----------VOTANTE----------
     path('listarVotantes/', views.listarVotantes, name='listarVotantes'),
     path('verVotantes/', views.verVotantes, name='verVotantes'),
@@ -32,12 +23,10 @@ urlpatterns = [
 
     #--------------------------------------VOTO------------------------------------------------------------
     path('listarVotos/', views.listarVotos, name='listarVotos'),
-    path('crearVoto/', views.crearVoto, name='crearVoto'),
-
+    
     path('login/', views.votante_login, name='login'),
 
-    #-------ADMINISTRADOR------------
-
+    #--------------------------------------ADMINISTRADOR---------------------------------------------------
     path('registro_admin/', views.registro_administrador, name='registroAdmin'),
     path('login_admin/', views.login_administrador, name='loginAdmin'),
     path('pagina_admin/', views.pagina_administrador, name='paginaAdmin'),
@@ -45,5 +34,4 @@ urlpatterns = [
     path('listadoAdmin/', views.listadoAdmin, name='listarAdmin'),
     path('eliminarAdmin/<int:admin_id>/', views.eliminar_admin, name='eliminarAdmin'),
 
-
-    ]
+]

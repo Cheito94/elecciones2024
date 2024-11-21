@@ -33,26 +33,34 @@
                     <br>
                     
                     <label for="foto">Foto de la Lista:</label>
-                    {% if lista.foto %}
-                        <div>
-                            <img src="{{ lista.foto.url }}" alt="Foto de la lista" class="img-fluid" style="max-width: 200px;">
-                            <br><br>
-                            <p>Si desea cambiar la foto, elija un archivo nuevo:</p>
-                        </div>
-                    {% else %}
-                        <p>No hay foto para esta lista.</p>
-                    {% endif %}
                     <input type="file" name="foto" id="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
                     <br>
-
+                    
+                    <h4>Candidatos Actuales</h4>
+                    <div id="candidatos-container">
+                        {% for candidato in candidatos %}
+                        <div class="candidato-item">
+                            <label>Nombre del Candidato:</label>
+                            <input type="text" name="candidatos[]" class="form-control" value="{{ candidato.nombre }}" required>
+                            <label>Rol:</label>
+                            <select name="roles[]" class="form-control">
+                                {% for key, value in lista.ROLES %}
+                                <option value="{{ key }}" {% if candidato.rol == key %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" id="add-candidato" class="btn btn-secondary">Agregar otro candidato</button>
+                    <br><br>
+                
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="{% url 'verListas' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> Volver
-                    </a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a href="{% url 'listarListas' %}" class="btn btn-outline-secondary">Volver</a>
                     </div>
                 </form>
+                
                 <br><br>
             </div>
         </div>

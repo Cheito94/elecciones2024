@@ -35,50 +35,46 @@
                     <label for="foto">Foto de la Lista:</label>
                     <input type="file" name="foto" id="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
                     <br>
-
+                
+                    <h4>Agregar Candidatos</h4>
+                    <div id="candidatos-container">
+                        <div class="candidato-item">
+                            <label>Nombre del Candidato:</label>
+                            <input type="text" name="candidatos[]" class="form-control" placeholder="Ingrese el nombre del candidato" required>
+                            <label>Rol:</label>
+                            <select name="roles[]" class="form-control">
+                                <option value="PRESIDENTE">Presidente</option>
+                                <option value="VICEPRESIDENTE">Vicepresidente</option>
+                                <option value="SECRETARIO">Secretario</option>
+                                <option value="TESORERO">Tesorero</option>
+                                <option value="1ER VOCAL PRINCIPAL">1er Vocal Principal</option>
+                                <option value="2DO VOCAL PRINCIPAL">2do Vocal Principal</option>
+                                <option value="3ER VOCAL PRINCIPAL">3er Vocal Principal</option>
+                                <option value="1ER VOCAL SUPLENTE">1er Vocal Suplente</option>
+                                <option value="2DO VOCAL SUPLENTE">2do Vocal Suplente</option>
+                                <option value="3ER VOCAL SUPLENTE">3er Vocal Suplente</option>
+                            </select>
+                            <br>
+                        </div>
+                    </div>
+                    <button type="button" id="add-candidato" class="btn btn-secondary">Agregar otro candidato</button>
+                    <br><br>
+                
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Guardar</button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="{% url 'listarListas' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> Volver
-                    </a>
+                        <a href="{% url 'listarListas' %}" class="btn btn-outline-secondary">Volver</a>
                     </div>
                 </form>
-                <br><br>
+                
+                <script>
+                    document.getElementById('add-candidato').addEventListener('click', function() {
+                        const container = document.getElementById('candidatos-container');
+                        const newCandidato = document.querySelector('.candidato-item').cloneNode(true);
+                        container.appendChild(newCandidato);
+                    });
+                </script>
             </div>
         </div>
     </div>
 </div>
-<script>
-    $("#frm_nueva_lista").validate({
-        rules: {
-            nombre: {
-                required: true,
-                minlength: 3
-            },
-            color: {
-                required: true,
-                minlength: 3
-            },
-            numero: {
-                required: true,
-                number: true
-            }
-        },
-        messages: {
-            nombre: {
-                required: "Por favor ingrese el nombre de la lista",
-                minlength: "El nombre de la lista debe tener al menos 3 letras"
-            },
-            color: {
-                required: "Por favor ingrese el color de la lista",
-                minlength: "El color debe tener al menos 3 letras"
-            },
-            numero: {
-                required: "Por favor ingrese el número de la lista",
-                number: "Ingrese un número válido"
-            }
-        }
-    });
-</script>
 {% endblock %}

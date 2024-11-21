@@ -39,6 +39,27 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <!-- Botón para mostrar u ocultar los candidatos -->
+                        <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse" data-bs-target="#candidatos{{ lista.id }}" aria-expanded="false" aria-controls="candidatos{{ lista.id }}">
+                            Ver Candidatos
+                        </button>
+
+                        <!-- Lista de candidatos (inicialmente oculta) -->
+                        <div class="collapse" id="candidatos{{ lista.id }}">
+                            <div class="mt-3">
+                                <h6>Candidatos:</h6>
+                                {% if lista.candidatos.all %}
+                                    <ul>
+                                        {% for candidato in lista.candidatos.all %}
+                                            <li>{{ candidato.nombre }} - {{ candidato.rol }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p>No hay candidatos para esta lista.</p>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer text-center">
                         <a href="{% url 'editarLista' lista.id %}" class="btn btn-warning">
@@ -58,6 +79,7 @@
     </div>
 </div>
 
+<!-- Modal de confirmación de eliminación -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -66,7 +88,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Está seguro de que desea eliminar esta candidato con su cargo?
+                ¿Está seguro de que desea eliminar esta lista con su candidato?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -76,9 +98,9 @@
     </div>
 </div>
 
-<!-- Script de eliminación -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Código para manejar el enlace del modal de eliminación
         var deleteModal = document.getElementById('confirmDeleteModal');
         deleteModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
@@ -88,6 +110,5 @@
         });
     });
 </script>
-
 
 {% endblock %}
