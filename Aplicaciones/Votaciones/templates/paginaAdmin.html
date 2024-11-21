@@ -12,26 +12,22 @@
 
 <hr>
 <div class="container">
-        <div class="col-6">
+    <div class="row text-center">
+        <div class="col-4">
             <a href="{% url 'listarListas' %}">
                 <img src="{% static 'img/lista.png' %}" class="img-fluid" alt="Imagen Votantes">
                 <br><br>
-                <h4>Listas</h4>
+                <h4>Listas Por Nombre</h4>
             </a>
         </div>
-    </div>
-</div>
-<br><br><br>
-<div class="container">
-    <div class="row text-center">    
-        <div class="col-6">
+        <div class="col-4">
             <a href="{% url 'listarVotos' %}">
                 <img src="{% static 'img/votosTotales.png' %}" class="img-fluid" alt="Imagen Votos">
                 <br><br>
                 <h4>Votos</h4>
             </a>
         </div>
-        <div class="col-6">
+        <div class="col-4">
             <a href="{% url 'listarVotantes' %}">
                 <img src="{% static 'img/verVotos.png' %}" class="img-fluid" alt="Imagen Votantes">
                 <br><br>

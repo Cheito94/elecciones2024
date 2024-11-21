@@ -56,39 +56,23 @@ def crearLista(request):
     return render(request, 'crearLista.html')
 
 def editarLista(request, lista_id):
-    lista = get_object_or_404(Lista, id=lista_id)  # Obtenemos la lista por ID
-    
-    # Procesamos la solicitud POST
+    lista = get_object_or_404(Lista, id=lista_id)
     if request.method == 'POST':
-        # Actualizamos los datos de la lista
         lista.nombre = request.POST['nombre']
         lista.color = request.POST['color']
         lista.numero = request.POST['numero']
-        
-        # Si hay una nueva foto, la actualizamos
         if 'foto' in request.FILES:
             lista.foto = request.FILES['foto']
-        
-        # Guardamos los cambios en la lista
         lista.save()
-
-        # Actualizar o crear candidatos
         candidatos = request.POST.getlist('candidatos[]')
         roles = request.POST.getlist('roles[]')
-
-        # Eliminamos los candidatos actuales (si es necesario)
-        lista.candidatos.all().delete()  # Cambié `candidato_set` por `candidatos.all()`
-
-        # Creamos nuevos candidatos
+        lista.candidatos.all().delete() 
         for nombre_candidato, rol_candidato in zip(candidatos, roles):
             if nombre_candidato and rol_candidato:
                 Candidato.objects.create(lista=lista, nombre=nombre_candidato, rol=rol_candidato)
-
         messages.success(request, 'Lista y candidatos actualizados con éxito')
-        return redirect('listarListas')  # Redirige a la vista de listas
-    
-    # En caso de un GET, mostramos los datos actuales de la lista y sus candidatos
-    candidatos = lista.candidatos.all()  # Cambié `candidato_set.all()` por `candidatos.all()`
+        return redirect('listarListas')
+    candidatos = lista.candidatos.all()
 
     context = {
         'lista': lista,

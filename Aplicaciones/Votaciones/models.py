@@ -28,9 +28,7 @@ class Voto(models.Model):
     def __str__(self):
         fila = "{0}: {1} - {2} - {3}"
         return fila.format(self.id, self.fecha, self.votante)
-
-from django.db import models
-
+    
 class Lista(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, null=True)

@@ -46,19 +46,17 @@
                         </button>
 
                         <!-- Lista de candidatos (inicialmente oculta) -->
-                        <div class="collapse" id="candidatos{{ lista.id }}">
-                            <div class="mt-3">
-                                <h6>Candidatos:</h6>
-                                {% if lista.candidatos.all %}
-                                    <ul>
-                                        {% for candidato in lista.candidatos.all %}
-                                            <li>{{ candidato.nombre }} - {{ candidato.rol }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% else %}
-                                    <p>No hay candidatos para esta lista.</p>
-                                {% endif %}
-                            </div>
+                        <div class="collapse mt-3" id="candidatos{{ lista.id }}">
+                            <h6>Candidatos:</h6>
+                            {% if lista.candidatos.all %}
+                                <ul>
+                                    {% for candidato in lista.candidatos.all %}
+                                        <li>{{ candidato.nombre }} - {{ candidato.rol }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No hay candidatos para esta lista.</p>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="card-footer text-center">
