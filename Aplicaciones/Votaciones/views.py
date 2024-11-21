@@ -98,20 +98,16 @@ def verVotantes(request):
 def crearVotante(request):
     if request.method == 'POST':
         ced = request.POST['ci']
-        nom = request.POST['nombre']
-        apell = request.POST['apellido']
-        corr = request.POST['email']
-        fechNac = request.POST.get('fechaNacimiento')
-        password = request.POST['password']  # Obtén la contraseña del formulario
         
         if Votante.objects.filter(ci=ced).exists():
             messages.error(request, 'Ya existe un votante con esta cédula.')
             return render(request, 'crearVotante.html')
         nuevoVotante = Votante.objects.create(
-            ci=ced, nombre=nom, apellido=apell, email=corr, fechaNacimiento=fechNac, password=make_password(password))
+            ci=ced )
         messages.success(request, 'Votante guardado con éxito')
-        return redirect('verVotantes')
+        return redirect('verListas')
     return render(request, 'crearVotante.html')
+
                                             
 def eliminarVotante(request, id):
     votanteEliminar = get_object_or_404(Votante, id=id)

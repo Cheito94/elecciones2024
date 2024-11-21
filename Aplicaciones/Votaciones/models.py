@@ -7,17 +7,12 @@ from django.contrib.auth.models import User
 class Votante(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
     ci = models.CharField(max_length=10, null=True, unique=True)
-    nombre = models.CharField(max_length=100, null=True)
-    apellido = models.CharField(max_length=100, null=True)
-    fechaNacimiento = models.DateTimeField(null=True)
-    password = models.CharField(max_length=128, null=False, default='temporary_password')
     ha_votado = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'ci'
-    REQUIRED_FIELDS = ['nombre', 'apellido', 'email']
 
     def __str__(self):
-        return f"{self.id}: {self.nombre} - {self.apellido} - {self.email} - {self.fechaNacimiento}"
+        return f"{self.id}: {self.ci}"
 
 # Modelo Voto
 class Voto(models.Model):
