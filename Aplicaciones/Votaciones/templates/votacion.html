@@ -1,0 +1,75 @@
+{% extends "plantilla.html" %}
+
+{% block body %}
+<br>
+<div class="container">
+    <h2 class="text-center">Votación para {{ votante.ci }}</h2>
+    <div class="text-center mb-4">
+        <a href="{% url 'inicio' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
+    </div>
+
+    <div class="row">
+        {% for lista in listas %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-center">
+                        <h4 class="card-title">{{ lista.nombre }}</h4>
+                        <h6 class="card-text">Lista N° : {{ lista.numero }}</h6>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th>Foto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {% if lista.foto %}
+                                            <img src="{{ lista.foto.url }}" alt="Foto de {{ lista.nombre }}" style="width: 100px; height: 100px;">
+                                        {% else %}
+                                            No hay foto disponible
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Botón para ver candidatos -->
+                        <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse" data-bs-target="#candidatos{{ lista.id }}" aria-expanded="false" aria-controls="candidatos{{ lista.id }}">
+                            Ver Candidatos
+                        </button>
+
+                        <!-- Lista de candidatos (se despliega al hacer clic) -->
+                        <div class="collapse mt-3" id="candidatos{{ lista.id }}">
+                            <h6>Candidatos:</h6>
+                            {% if lista.candidatos.all %}
+                                <ul>
+                                    {% for candidato in lista.candidatos.all %}
+                                        <li>{{ candidato.nombre }} - {{ candidato.rol }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No hay candidatos para esta lista.</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Formulario para votar por la lista -->
+                        <form action="{% url 'votacion' votante_id=votante.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="lista_id" value="{{ lista.id }}">
+                            <button type="submit" class="btn btn-success w-100 mt-3">Vota por {{ lista.nombre }}</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-warning" role="alert">
+                No hay listas disponibles.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

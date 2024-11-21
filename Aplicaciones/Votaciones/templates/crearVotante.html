@@ -1,4 +1,5 @@
-{% extends "./plantilla.html" %}
+{% extends "plantilla.html" %}
+
 {% block body %}
 <div class="container-fluid">
     <div class="row">
@@ -6,60 +7,32 @@
         <div class="col-md-4">
             <br>
             <h2 style="text-align: center;">Nuevo Votante</h2>
-            <div>
-                <!-- Bloque para mostrar mensajes -->
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
 
-                <form action="{% url 'crearVotante' %}" method="POST" enctype="multipart/form-data" id="frm_nuevo_votante">
-                    {% csrf_token %}
-                    <label for="ci">Cédula:</label>
-                    <input type="text" name="ci" class="form-control" placeholder="Ingrese su N° de cédula" required>
-                    <br>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">Volver</a>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" role="alert">
+                        {{ message }}
                     </div>
-                </form>
-                <br><br>
-            </div>
+                {% endfor %}
+            {% endif %}
+
+            <form action="{% url 'crearVotante' %}" method="POST">
+                {% csrf_token %}
+                <label for="ci">Cédula:</label>
+                <input type="text" name="ci" class="form-control" placeholder="Ingrese su N° de cédula" required>
+                <br>
+
+                <label for="nombre">Nombre y Apellido:</label>
+                <input type="text" name="nombre" class="form-control" placeholder="Ingrese su Nombre y Apellido" required>
+                <br>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">Volver</a>
+                </div>
+            </form>
+            <br><br>
         </div>
     </div>
 </div>
-
-<script>
-    // Validación del formulario con jQuery Validate
-    $("#frm_nuevo_votante").validate({
-        rules: {
-            ci: {
-                required: true,
-                number: true,
-                minlength: 3,
-                maxlength: 10
-            } 
-        },
-        messages: {
-            ci: {
-                required: "Ingrese su cédula",
-                number: "Ingrese un número de cédula válido",
-                minlength: "El número de cédula debe tener al menos 3 dígitos",
-                maxlength: "El número de cédula no debe tener más de 10 dígitos"
-            }
-        },
-        errorClass: "text-danger",
-        highlight: function(element) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function(element) {
-            $(element).removeClass('is-invalid');
-        }
-    });
-</script>
-
 {% endblock %}

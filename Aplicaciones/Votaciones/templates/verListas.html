@@ -1,43 +1,40 @@
-{% extends "./plantilla.html" %}
-{% block body %}
+{% extends "plantillaAdmin.html" %}
 
+{% block body %}
 <br>
 <div class="container">
-    <h2 class="text-center">Listas</h2>
-    <div class="text-center mb-4">
-        <a href="{% url 'inicio' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
-    </div>
+    <h2 class="text-center">Listas de Votación</h2>
 
-    <!-- Contenedor para las listas, usando flexbox -->
     <div class="row">
         {% for lista in listas %}
             <div class="col-md-6 mb-6">
-                <!-- Tarjeta para cada lista -->
                 <div class="card h-100">
                     <div class="card-header text-center">
-                        <h5 class="card-title">{{ lista.nombre }}</h5>
+                        <h4 class="card-title">{{ lista.nombre }}</h4>
+                        <h6 class="card-title">Lista N°: {{ lista.numero }}</h6>
                     </div>
                     <div class="card-body">
+                        <h5 class="text-center">Votantes</h5>
                         <table class="table table-bordered table-striped table-hover text-center">
                             <thead>
                                 <tr>
-                                    <th>Color</th>
-                                    <th>Número</th>
-                                    <th>Mascota</th>
+                                    <th>Cédula</th>
+                                    <th>Nombre y Apellido</th>
+                                    <th>Fecha del Voto</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>{{ lista.color }}</td>
-                                    <td>{{ lista.numero }}</td>
-                                    <td>
-                                        {% if lista.foto %}
-                                            <img src="{{ lista.foto.url }}" alt="Foto de {{ lista.nombre }}" style="width: 100px; height: 100px;">
-                                        {% else %}
-                                            No hay foto disponible
-                                        {% endif %}
-                                    </td>
-                                </tr>
+                                {% for voto in lista.votos.all %}
+                                    <tr>
+                                        <td>{{ voto.votante.ci }}</td> 
+                                        <td>{{ voto.votante.nombre }}</td>  <!-- Mostrar el número de cédula del votante -->
+                                        <td>{{ voto.fecha }}</td>  <!-- Mostrar la fecha del voto -->
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="2">No hay votos registrados para esta lista.</td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -50,5 +47,4 @@
         {% endfor %}
     </div>
 </div>
-
 {% endblock %}

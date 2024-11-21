@@ -12,15 +12,11 @@
 </div>
     
 <div class="container">
-    <table class="table table-borderd table-striped" id="tbl-votantes">
+    <table class="table table-borderd table-striped" id="tbl-votantes" style="width: 50%;">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>CI</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Correo</th>
-                <th>Fecha de Nacimiento</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -29,11 +25,6 @@
             <tr>
                 <td>{{ votante.id }}</td>
                 <td>{{ votante.ci }}</td>
-                <td>{{ votante.nombre }}</td>
-                <td>{{ votante.apellido }}</td>
-                <td>{{ votante.email }}</td>
-                <td>{{ votante.fechaNacimiento }}</td>
-
                 <td>   
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'eliminarVotante' votante.id %}">
                         <i class="fa-regular fa-trash-can"></i>

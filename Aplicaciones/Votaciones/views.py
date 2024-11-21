@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth import login
+from django.utils import timezone
 
 # Create your views here.z
 def inicio(request):
@@ -98,16 +99,21 @@ def verVotantes(request):
 def crearVotante(request):
     if request.method == 'POST':
         ced = request.POST['ci']
-        
+        nom = request.POST['nombre']
+
+        # Verificar si el votante ya existe
         if Votante.objects.filter(ci=ced).exists():
             messages.error(request, 'Ya existe un votante con esta cédula.')
             return render(request, 'crearVotante.html')
-        nuevoVotante = Votante.objects.create(
-            ci=ced )
-        messages.success(request, 'Votante guardado con éxito')
-        return redirect('verListas')
-    return render(request, 'crearVotante.html')
 
+        # Si no existe, crear nuevo votante
+        nuevoVotante = Votante.objects.create(ci=ced, nombre=nom)
+        messages.success(request, 'Votante guardado con éxito')
+
+        # Redirigir a la página de votación
+        return redirect('votacion', votante_id=nuevoVotante.id)
+
+    return render(request, 'crearVotante.html')
                                             
 def eliminarVotante(request, id):
     votanteEliminar = get_object_or_404(Votante, id=id)
@@ -224,3 +230,33 @@ def eliminar_admin(request, admin_id):
         messages.error(request, 'No tienes permiso para realizar esta acción.')
         return redirect('loginAdmin')
 
+#-----------------------------VOTO-----------------------------------------------------------
+
+def votacion(request, votante_id):
+    votante = Votante.objects.get(id=votante_id)
+    listas = Lista.objects.all()
+
+    if request.method == 'POST':
+        lista_id = request.POST.get('lista_id')  # Obtener el ID de la lista seleccionada
+        lista_votada = Lista.objects.get(id=lista_id)  # Obtener la lista seleccionada
+
+        # Crear un voto para este votante
+        Voto.objects.create(
+            votante=votante,  # Relaciona el voto con el votante
+            lista_votada=lista_votada,  # Relaciona el voto con la lista seleccionada
+            fecha=timezone.now()  # Guarda la fecha y hora del voto
+        )
+
+        messages.success(request, f'Voto registrado con éxito por {votante.ci} en la lista {lista_votada.nombre}')
+        return redirect('inicio')  # Redirige a la página donde se ven las listas
+
+    return render(request, 'votacion.html', {'votante': votante, 'listas': listas})
+
+def verListas(request):
+    listas = Lista.objects.all()  # Obtener todas las listas
+
+    # Obtenemos todos los votos asociados a cada lista y los asociamos a la lista correspondiente
+    for lista in listas:
+        lista.votos = Voto.objects.filter(lista_votada=lista)  # Filtrar los votos para cada lista
+
+    return render(request, 'verListas.html', {'listas': listas})
