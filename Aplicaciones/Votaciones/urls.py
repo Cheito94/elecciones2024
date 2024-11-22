@@ -7,6 +7,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('',views.inicio, name='inicio'),
+    #-----Otras rutas----
+    path('reporte-listas/', views.reporte_listas, name='reporteListas'),
 
     #----------VOTANTE----------
     path('listarVotantes/', views.listarVotantes, name='listarVotantes'),
