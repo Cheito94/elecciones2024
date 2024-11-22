@@ -14,14 +14,16 @@ urlpatterns = [
     path('eliminarVotante/<int:id>/', views.eliminarVotante, name='eliminarVotante'),    
     path('crearVotante/', views.crearVotante, name='crearVotante'),
     path('votacion/<int:votante_id>/', views.votacion, name='votacion'),
+    path('eliminarVoto/<int:voto_id>/', views.eliminarVoto, name='eliminarVoto'),
+
 
     #-------------------------------------LISTAS-----------------------------------------------------------
     path('verListas/', views.verListas, name='verListas'),
+    path('listasParaUsuario/', views.listasParaUsuario, name='listasParaUsuario'),
     path('listarListas/', views.listarListas, name='listarListas'),
     path('crearLista/', views.crearLista, name='crearLista'),
     path('editarLista/<int:lista_id>/', views.editarLista, name='editarLista'),
     path('eliminarLista/<int:lista_id>/', views.eliminarLista, name='eliminarLista'),
-    
 
     #--------------------------------------VOTO------------------------------------------------------------
     path('listarVotos/', views.listarVotos, name='listarVotos'),

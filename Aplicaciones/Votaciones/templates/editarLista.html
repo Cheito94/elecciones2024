@@ -17,7 +17,7 @@
                     </ul>
                 {% endif %}
 
-                <form action="{% url 'editarLista' lista.id %}" method="POST" enctype="multipart/form-data" id="frm_editar_lista">
+                <form action="{% url 'editarLista' lista.id %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     
                     <label for="nombre">Nombre de la Lista:</label>
@@ -41,9 +41,9 @@
                         {% for candidato in candidatos %}
                         <div class="candidato-item">
                             <label>Nombre del Candidato:</label>
-                            <input type="text" name="candidatos[]" class="form-control" value="{{ candidato.nombre }}" required>
+                            <input type="text" name="candidatos[{{ candidato.id }}][nombre]" class="form-control" value="{{ candidato.nombre }}" required>
                             <label>Rol:</label>
-                            <select name="roles[]" class="form-control">
+                            <select name="candidatos[{{ candidato.id }}][rol]" class="form-control">
                                 {% for key, value in lista.ROLES %}
                                 <option value="{{ key }}" {% if candidato.rol == key %}selected{% endif %}>{{ value }}</option>
                                 {% endfor %}
@@ -52,9 +52,21 @@
                         </div>
                         {% endfor %}
                     </div>
-                    <button type="button" id="add-candidato" class="btn btn-secondary">Agregar otro candidato</button>
-                    <br><br>
-                
+                    
+                    <h4>Agregar Nuevo Candidato</h4>
+                    <div>
+                        <label>Nombre:</label>
+                        <input type="text" name="candidatos[new][nombre]" class="form-control">
+                        <label>Rol:</label>
+                        <select name="candidatos[new][rol]" class="form-control">
+                            <option value="" selected>Seleccione un rol</option>
+                            {% for key, value in lista.ROLES %}
+                            <option value="{{ key }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                        <br>
+                    </div>
+                    
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Guardar</button>
                         <a href="{% url 'listarListas' %}" class="btn btn-outline-secondary">Volver</a>
@@ -66,37 +78,4 @@
         </div>
     </div>
 </div>
-
-<script>
-    $("#frm_editar_lista").validate({
-        rules: {
-            nombre: {
-                required: true,
-                minlength: 3
-            },
-            color: {
-                required: true,
-                minlength: 3
-            },
-            numero: {
-                required: true,
-                number: true
-            }
-        },
-        messages: {
-            nombre: {
-                required: "Por favor ingrese el nombre de la lista",
-                minlength: "El nombre de la lista debe tener al menos 3 letras"
-            },
-            color: {
-                required: "Por favor ingrese el color de la lista",
-                minlength: "El color debe tener al menos 3 letras"
-            },
-            numero: {
-                required: "Por favor ingrese el número de la lista",
-                number: "Ingrese un número válido"
-            }
-        }
-    });
-</script>
 {% endblock %}

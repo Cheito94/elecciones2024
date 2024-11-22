@@ -1,10 +1,13 @@
 {% extends "plantillaAdmin.html" %}
 
 {% block body %}
-<br>
+<br><br><br><br>
 <div class="container">
     <h2 class="text-center">Listas de Votación</h2>
-
+    <div class="text-center">
+        <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
+    </div>
+    <br>
     <div class="row">
         {% for lista in listas %}
             <div class="col-md-6 mb-6">
@@ -27,12 +30,12 @@
                                 {% for voto in lista.votos.all %}
                                     <tr>
                                         <td>{{ voto.votante.ci }}</td> 
-                                        <td>{{ voto.votante.nombre }}</td>  <!-- Mostrar el número de cédula del votante -->
-                                        <td>{{ voto.fecha }}</td>  <!-- Mostrar la fecha del voto -->
+                                        <td>{{ voto.votante.nombre }}</td> 
+                                        <td>{{ voto.fecha }}</td>
                                     </tr>
                                 {% empty %}
                                     <tr>
-                                        <td colspan="2">No hay votos registrados para esta lista.</td>
+                                        <td colspan="4">No hay votos registrados para esta lista.</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -47,4 +50,7 @@
         {% endfor %}
     </div>
 </div>
+
+<br><br>
+
 {% endblock %}

@@ -17,6 +17,7 @@
             <tr>
                 <th>Id</th>
                 <th>CI</th>
+                <th>Nombre</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -24,6 +25,7 @@
             {% for votante in votantes %}
             <tr>
                 <td>{{ votante.id }}</td>
+                <td>{{ votante.nombre }}</td>
                 <td>{{ votante.ci }}</td>
                 <td>   
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'eliminarVotante' votante.id %}">

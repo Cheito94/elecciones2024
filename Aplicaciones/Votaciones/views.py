@@ -23,30 +23,34 @@ def verListas(request):
     listas = Lista.objects.all()
     return render(request, 'verListas.html', {'listas': listas})
 
+def listasParaUsuario(request):
+    listas = Lista.objects.all()
+    return render(request, 'listasParaUsuario.html', {'listas': listas})
+
+def eliminarVoto(request, voto_id):
+    if request.method == 'POST':
+        voto = get_object_or_404(Voto, id=voto_id)
+        voto.delete()
+        messages.success(request, 'Voto eliminado con éxito.')
+        return redirect('verListas')
+    return redirect('verListas')
+
 def listarListas(request):
     listas = Lista.objects.all()
     return render(request, 'listarListas.html', {'listas': listas})
 
 def crearLista(request):
     if request.method == 'POST':
-        # Datos de la lista
         nom = request.POST['nombre']
         col = request.POST['color']
         num = request.POST['numero']
         fot = request.FILES.get('foto')
-
-        # Verificar si ya existe una lista con el mismo nombre
         if Lista.objects.filter(nombre=nom).exists():
             messages.error(request, 'Ya existe una Lista con este nombre')
             return render(request, 'crearLista.html')
-
-        # Crear la nueva lista
         nueva_lista = Lista.objects.create(nombre=nom, color=col, numero=num, foto=fot)
-
-        # Procesar los candidatos
         candidatos = request.POST.getlist('candidatos[]')
         roles = request.POST.getlist('roles[]')
-
         for nombre_candidato, rol_candidato in zip(candidatos, roles):
             if nombre_candidato and rol_candidato:
                 Candidato.objects.create(lista=nueva_lista, nombre=nombre_candidato, rol=rol_candidato)
@@ -100,17 +104,11 @@ def crearVotante(request):
     if request.method == 'POST':
         ced = request.POST['ci']
         nom = request.POST['nombre']
-
-        # Verificar si el votante ya existe
         if Votante.objects.filter(ci=ced).exists():
             messages.error(request, 'Ya existe un votante con esta cédula.')
             return render(request, 'crearVotante.html')
-
-        # Si no existe, crear nuevo votante
         nuevoVotante = Votante.objects.create(ci=ced, nombre=nom)
         messages.success(request, 'Votante guardado con éxito')
-
-        # Redirigir a la página de votación
         return redirect('votacion', votante_id=nuevoVotante.id)
 
     return render(request, 'crearVotante.html')
@@ -130,20 +128,15 @@ def votante_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         try:
             votante = Votante.objects.get(ci=username)
         except Votante.DoesNotExist: 
             messages.error(request, 'Usuario o contraseña incorrectos.')
             return render(request, 'login.html')
-
-        # Verificar la contraseña
         if check_password(password, votante.password):
-            # Verificar si el votante ya ha votado
             if votante.ha_votado:
                 messages.warning(request, 'Ya has realizado tu voto y no puedes votar de nuevo.')
-                return redirect('inicio')  # Redirige al inicio si ya ha votado
-            # Iniciar sesión y redirigir a la página de votar
+                return redirect('inicio')  
             request.session['votante_id'] = votante.id
             request.session['ha_votado'] = votante.ha_votado
             messages.success(request, 'Inicio de sesión exitoso.')
@@ -172,7 +165,7 @@ def registro_administrador(request):
 
         if not errors:
             user = User.objects.create_user(username=username, password=password)
-            user.is_staff = True  # Marcar como administrador
+            user.is_staff = True
             user.save()
             
             login(request, user)
@@ -218,7 +211,6 @@ def listadoAdmin(request):
         messages.error(request, 'No tienes permiso para acceder a esta página.')
         return redirect('loginAdmin')
 
-
 @login_required
 def eliminar_admin(request, admin_id):
     if request.user.is_staff:
@@ -237,26 +229,15 @@ def votacion(request, votante_id):
     listas = Lista.objects.all()
 
     if request.method == 'POST':
-        lista_id = request.POST.get('lista_id')  # Obtener el ID de la lista seleccionada
-        lista_votada = Lista.objects.get(id=lista_id)  # Obtener la lista seleccionada
-
-        # Crear un voto para este votante
-        Voto.objects.create(
-            votante=votante,  # Relaciona el voto con el votante
-            lista_votada=lista_votada,  # Relaciona el voto con la lista seleccionada
-            fecha=timezone.now()  # Guarda la fecha y hora del voto
-        )
-
+        lista_id = request.POST.get('lista_id')  
+        lista_votada = Lista.objects.get(id=lista_id)
+        Voto.objects.create(votante=votante, lista_votada=lista_votada, fecha=timezone.now())
         messages.success(request, f'Voto registrado con éxito por {votante.ci} en la lista {lista_votada.nombre}')
-        return redirect('inicio')  # Redirige a la página donde se ven las listas
-
+        return redirect('inicio')
     return render(request, 'votacion.html', {'votante': votante, 'listas': listas})
 
 def verListas(request):
-    listas = Lista.objects.all()  # Obtener todas las listas
-
-    # Obtenemos todos los votos asociados a cada lista y los asociamos a la lista correspondiente
+    listas = Lista.objects.all()
     for lista in listas:
-        lista.votos = Voto.objects.filter(lista_votada=lista)  # Filtrar los votos para cada lista
-
+        lista.votos = Voto.objects.filter(lista_votada=lista)  
     return render(request, 'verListas.html', {'listas': listas})

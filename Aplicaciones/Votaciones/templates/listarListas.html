@@ -1,9 +1,9 @@
 {% extends "./plantillaAdmin.html" %}
 {% block body %}
 
-<br><br>
+<br><br><br><br>
 <div class="container">
-    <h2 class="text-center">Listas</h2>
+    <h2 class="text-center">Listas A Exponer</h2>
     <div class="text-center mb-4">
         <a href="{% url 'crearLista' %}" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear Lista</a>
         &nbsp;&nbsp;
@@ -40,12 +40,10 @@
                             </tbody>
                         </table>
 
-                        <!-- Botón para mostrar u ocultar los candidatos -->
                         <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse" data-bs-target="#candidatos{{ lista.id }}" aria-expanded="false" aria-controls="candidatos{{ lista.id }}">
                             Ver Candidatos
                         </button>
 
-                        <!-- Lista de candidatos (inicialmente oculta) -->
                         <div class="collapse mt-3" id="candidatos{{ lista.id }}">
                             <h6>Candidatos:</h6>
                             {% if lista.candidatos.all %}
@@ -86,7 +84,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Está seguro de que desea eliminar esta lista con su candidato?
+                ¿Está seguro de que desea eliminar esta lista con sus candidatos?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
