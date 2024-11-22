@@ -1,3 +1,4 @@
+
 {% extends "./plantilla.html" %}
 
 {% block body %}
@@ -51,6 +52,68 @@
                     </div>
                 </div>
             </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+=======
+{% extends "./plantilla.html" %}
+
+{% block body %}
+<br>
+<div class="container">
+    <div class="card">
+        <div class="card-title text-center">
+            <h3 class="display-6"><b>Reporte de Listas</b></h3>
+        </div>
+    </div>
+    <br>
+
+    <div class="text-center mb-4">
+        <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info">
+            <i class="fas fa-arrow-left"></i> Regresar
+        </a>
+    </div>
+
+    <div class="row gy-4 justify-content-center">
+        {% for item in listas_con_votos %}
+        <div class="col-md-4 d-flex align-items-stretch">
+            <div class="card border-0 shadow-lg h-100 transition-transform transform-hover">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="card-title mb-0">{{ item.lista.nombre }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center mb-3">
+                        {% if item.lista.foto %}
+                        <img src="{{ item.lista.foto.url }}" alt="Foto de {{ item.lista.nombre }}"
+                            class="img-fluid rounded-circle shadow-sm" style="max-height: 120px; max-width: 120px;">
+                        {% else %}
+                        <p class="text-center text-muted">No hay foto disponible</p>
+                        {% endif %}
+                    </div>
+
+                    <p><strong>Color:</strong> <span class="badge rounded-pill"
+                            style="background-color: {{ item.lista.color }};">&nbsp;&nbsp;&nbsp;&nbsp;</span> {{
+                        item.lista.color }}</p>
+                    <p><strong>Número:</strong> {{ item.lista.numero }}</p>
+                    <p><strong>Número de Votos:</strong> <span class="badge bg-success fs-6">{{ item.num_votos }}</span>
+                    </p>
+
+                    <h5 class="text-center mt-4">Candidatos</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for candidato in item.candidatos %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ candidato.nombre }}</span>
+                            <span class="badge bg-secondary">{{ candidato.get_rol_display }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer bg-light text-center">
+                    <small class="text-muted">Lista N° {{ item.lista.numero }}</small>
+                </div>
+            </div>
+        </div>
         {% endfor %}
     </div>
 </div>
