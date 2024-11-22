@@ -1,5 +1,5 @@
 from typing import Counter
-from . models import Votante, Voto, Lista, Candidato
+from . models import Votante, Voto, Lista, Candidato, Lista  
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -18,6 +18,23 @@ from django.utils import timezone
 def inicio(request):
     return render(request, 'inicio.html')
 
+#----------------Reporte de Listas-------------------
+def reporte_listas(request):
+    # Obtener todas las listas con sus votos y candidatos
+    listas = Lista.objects.prefetch_related('voto_set', 'candidatos')  # prefetch_related para optimizar las consultas
+
+    # Crear el contexto para el template
+    listas_con_votos = [
+        {
+            'lista': lista,
+            'num_votos': lista.voto_set.count(),  # Contar los votos de cada lista
+            'candidatos': lista.candidatos.all()  # Obtener los candidatos de cada lista
+        }
+        for lista in listas
+    ]
+
+    context = {'listas_con_votos': listas_con_votos}
+    return render(request, 'reporteListas.html', context)
 #----------------Listas-------------------
 def verListas(request):
     listas = Lista.objects.all()
