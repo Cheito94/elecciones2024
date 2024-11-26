@@ -1,74 +1,86 @@
 {% extends "./plantillaAdmin.html" %}
 {% block body %}
 
-<br><br><br><br>
-<div class="container">
-    <h2 class="text-center">Listas A Exponer</h2>
+<div class="container py-5">
+    <h2 class="text-center text-primary mb-4"><strong>Listas A Exponer</strong></h2>
+
     <div class="text-center mb-4">
-        <a href="{% url 'crearLista' %}" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear Lista</a>
+        <a href="{% url 'crearLista' %}" class="btn btn-outline-success btn-lg"><i class="fas fa-plus"></i> Crear Lista</a>
         &nbsp;&nbsp;
-        <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
+        <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info btn-lg"><i class="fas fa-arrow-left"></i> Regresar</a>
     </div>
-    <div class="row">
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
         {% for lista in listas %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header text-center">
-                        <h5 class="card-title">{{ lista.nombre }}</h5>
+            <div class="col">
+                <div class="card shadow-lg border-light h-100">
+                    <div class="card-header text-center bg-primary text-white">
+                        <h5 class="card-title mb-0">{{ lista.nombre }}</h5>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered table-striped table-hover text-center">
-                            <thead>
-                                <tr>
-                                    <th>Color</th>
-                                    <th>Número</th>
-                                    <th>Mascota</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ lista.color }}</td>
-                                    <td>{{ lista.numero }}</td>
-                                    <td>
-                                        {% if lista.foto %}
-                                            <img src="{{ lista.foto.url }}" alt="Foto de {{ lista.nombre }}" style="width: 100px; height: 100px;">
-                                        {% else %}
-                                            No hay foto disponible
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover text-center mb-3">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th scope="col">Color</th>
+                                        <th scope="col">Número</th>
+                                        <th scope="col">Mascota</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
 
+                                        <td>{{ lista.color }}</td>
+                                        <td>{{ lista.numero }}</td>
+                                        <td>
+                                            {% if lista.foto %}
+                                                <img src="{{ lista.foto.url }}" alt="Foto de {{ lista.nombre }}" class="img-fluid rounded-circle shadow-sm" style="max-width: 100px; max-height: 100px;">
+                                            {% else %}
+                                                <span class="text-muted">No hay foto disponible</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Botón para desplegar/ocultar candidatos -->
                         <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse" data-bs-target="#candidatos{{ lista.id }}" aria-expanded="false" aria-controls="candidatos{{ lista.id }}">
-                            Ver Candidatos
+                            <i class="fas fa-users"></i> Ver Candidatos
                         </button>
 
+                        <!-- Sección colapsable para los candidatos -->
                         <div class="collapse mt-3" id="candidatos{{ lista.id }}">
-                            <h6>Candidatos:</h6>
-                            {% if lista.candidatos.all %}
-                                <ul>
-                                    {% for candidato in lista.candidatos.all %}
-                                        <li>{{ candidato.nombre }} - {{ candidato.rol }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% else %}
-                                <p>No hay candidatos para esta lista.</p>
-                            {% endif %}
+                            <h6><strong>Candidatos:</strong></h6>
+                            <div style="max-height: 200px; overflow-y: auto;">
+                                {% if lista.candidatos.all %}
+                                    <ul class="list-unstyled">
+                                        {% for candidato in lista.candidatos.all %}
+                                            <li class="d-flex justify-content-between align-items-center">
+                                                <span>{{ candidato.nombre }}</span> <span class="badge bg-secondary">{{ candidato.rol }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted">No hay candidatos para esta lista.</p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                    <div class="card-footer text-center">
-                        <a href="{% url 'editarLista' lista.id %}" class="btn btn-warning">
-                            <i class="fa-regular fa-pen-to-square"></i>
+
+                    <!-- Pie de tarjeta con botones de acción -->
+                    <div class="card-footer text-center bg-light">
+                        <a href="{% url 'editarLista' lista.id %}" class="btn btn-warning btn-sm">
+                            <i class="fa-regular fa-pen-to-square"></i> Editar
                         </a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'eliminarLista' lista.id %}">
-                            <i class="fa-regular fa-trash-can"></i>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'eliminarLista' lista.id %}">
+                            <i class="fa-regular fa-trash-can"></i> Eliminar
                         </button>
                     </div>
                 </div>
             </div>
         {% empty %}
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning text-center" role="alert">
                 No hay listas disponibles.
             </div>
         {% endfor %}

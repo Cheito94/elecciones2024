@@ -1,4 +1,5 @@
 {% extends "./plantillaAdmin.html" %}
+
 {% block body %}
 <br>
 <div class="card">
@@ -9,10 +10,26 @@
 <br>
 <div class="text-center">
     <a href="{% url 'paginaAdmin' %}" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> Regresar</a>
+    <a href="{% url 'generar_pdf_votantes' %}" class="btn btn-outline-success">
+        <i class="fas fa-file-pdf"></i> Descargar PDF
+    </a>
 </div>
-    
+<br>
+<div class="text-center">
+    <p><strong>Total de Votantes: {{ votantes|length }}</strong></p>
+</div>    
+
+<div class="text-center">
+    <form method="POST" action="{% url 'eliminar_todos_los_votantes' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar a todos los Votantes?')">
+            Eliminar Todos los Votantes
+        </button>
+    </form>
+</div>
+
 <div class="container">
-    <table class="table table-borderd table-striped" id="tbl-votantes" style="width: 50%;">
+    <table class="table table-bordered table-striped" id="tbl-votantes" style="width: 50%;">
         <thead>
             <tr>
                 <th>Id</th>
@@ -25,9 +42,9 @@
             {% for votante in votantes %}
             <tr>
                 <td>{{ votante.id }}</td>
-                <td>{{ votante.nombre }}</td>
                 <td>{{ votante.ci }}</td>
-                <td>   
+                <td>{{ votante.nombre }}</td>
+                <td>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'eliminarVotante' votante.id %}">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
@@ -68,10 +85,6 @@
         });
     });
 </script>
-
-
-
-
 
 <script>
     let table = new DataTable('#tbl-votantes');

@@ -10,15 +10,14 @@ urlpatterns = [
     #-----Otras rutas----
     path('reporte-listas/', views.reporte_listas, name='reporteListas'),
 
-    #----------VOTANTE----------
+    #----------------------------------------VOTANTE-------------------------------------------
     path('listarVotantes/', views.listarVotantes, name='listarVotantes'),
     path('verVotantes/', views.verVotantes, name='verVotantes'),
     path('eliminarVotante/<int:id>/', views.eliminarVotante, name='eliminarVotante'),    
     path('crearVotante/', views.crearVotante, name='crearVotante'),
     path('votacion/<int:votante_id>/', views.votacion, name='votacion'),
     path('eliminarVoto/<int:voto_id>/', views.eliminarVoto, name='eliminarVoto'),
-
-
+    path('eliminar-todos-los-votantes/', views.eliminar_todos_los_votantes, name='eliminar_todos_los_votantes'),
     #-------------------------------------LISTAS-----------------------------------------------------------
     path('verListas/', views.verListas, name='verListas'),
     path('listasParaUsuario/', views.listasParaUsuario, name='listasParaUsuario'),
@@ -39,5 +38,9 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('listadoAdmin/', views.listadoAdmin, name='listarAdmin'),
     path('eliminarAdmin/<int:admin_id>/', views.eliminar_admin, name='eliminarAdmin'),
+
+    #---------------------------PDF-----------------------------------------------
+    path('generar_pdf_votantes/', views.generar_pdf_votantes, name='generar_pdf_votantes'),
+    path('generar_pdf_listas/', views.generar_pdf_listas, name='generar_pdf_listas'),
 
 ]

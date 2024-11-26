@@ -13,6 +13,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth import login
 from django.utils import timezone
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 # Create your views here.z
 def inicio(request):
@@ -20,22 +25,19 @@ def inicio(request):
 
 #----------------Reporte de Listas-------------------
 def reporte_listas(request):
-    # Obtener todas las listas con sus votos y candidatos
-    listas = Lista.objects.prefetch_related('voto_set', 'candidatos')  # prefetch_related para optimizar las consultas
-
-    # Crear el contexto para el template
+    listas = Lista.objects.prefetch_related('votos_recibidos', 'candidatos')  
     listas_con_votos = [
         {
             'lista': lista,
-            'num_votos': lista.voto_set.count(),  # Contar los votos de cada lista
-            'candidatos': lista.candidatos.all()  # Obtener los candidatos de cada lista
+            'num_votos': lista.votos_recibidos.count(),  # Usando el related_name personalizado
+            'candidatos': lista.candidatos.all()  
         }
         for lista in listas
     ]
 
     context = {'listas_con_votos': listas_con_votos}
     return render(request, 'reporteListas.html', context)
-#----------------Listas-------------------
+#-------------------------------------Listas-------------------
 def verListas(request):
     listas = Lista.objects.all()
     return render(request, 'verListas.html', {'listas': listas})
@@ -108,7 +110,7 @@ def eliminarLista(request, lista_id):
     messages.success(request, 'Lista eliminada con éxito')
     return redirect('listarListas')
 
-#----------VOTANTE----------
+#------------------------------------------------VOTANTE---------------------------------------------
 def listarVotantes(request):
     votantes = Votante.objects.all()
     return render(request, 'listarVotantes.html', {'votantes': votantes})
@@ -135,6 +137,12 @@ def eliminarVotante(request, id):
     votanteEliminar.delete()
     messages.success(request, 'Votante eliminado con éxito')
     return redirect('listarVotantes')
+
+def eliminar_todos_los_votantes(request):
+    if request.method == 'POST':
+        Votante.objects.all().delete()  
+        messages.success(request, "Todos los votantes han sido eliminados.")
+        return redirect('paginaAdmin') 
 
 #----------VOTO----------
 def listarVotos(request):
@@ -258,3 +266,85 @@ def verListas(request):
     for lista in listas:
         lista.votos = Voto.objects.filter(lista_votada=lista)  
     return render(request, 'verListas.html', {'listas': listas})
+
+#-----------------------------------PDF Votante--------------------------
+
+def generar_pdf_votantes(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="REPORTE DE LOS VOTANTES.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    elementos = []
+
+    styles = getSampleStyleSheet()
+    titulo = "Lista de Votantes"
+    elementos.append(Paragraph(f"<b>{titulo}</b>", styles['Title']))
+
+    encabezados = ('ID', 'CI', 'Nombre')
+    datos = [encabezados]
+
+    votantes = Votante.objects.all()
+    for votante in votantes:
+        datos.append([str(votante.id), votante.ci, votante.nombre])
+
+    tabla = Table(datos)
+    tabla.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    
+    elementos.append(tabla)
+
+    total_votantes = len(votantes)
+    total_texto = f"<b>Total de Votantes:</b> {total_votantes}"
+    elementos.append(Paragraph(total_texto, styles['Normal']))
+
+    doc.build(elementos)
+
+    return response
+
+
+#------------------------PDFLista----------------------------------------------------------
+def generar_pdf_listas(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="REPORTE DE LISTAS.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    elementos = []
+
+    styles = getSampleStyleSheet()
+    titulo = "Reporte de Listas"
+    elementos.append(Paragraph(f"<b>{titulo}</b>", styles['Title']))
+
+    encabezados = ('Nombre de la Lista', 'Número de Votos')
+    datos = [encabezados]
+
+    listas = Lista.objects.all()
+
+    for lista in listas:
+        num_votos = lista.votos_recibidos.count()  
+        datos.append([lista.nombre, str(num_votos)])
+
+    tabla = Table(datos)
+    tabla.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+
+    elementos.append(tabla)
+
+    doc.build(elementos)
+
+    return response

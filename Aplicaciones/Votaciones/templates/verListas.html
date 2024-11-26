@@ -15,6 +15,13 @@
                     <div class="card-header text-center">
                         <h4 class="card-title">{{ lista.nombre }}</h4>
                         <h6 class="card-title">Lista N°: {{ lista.numero }}</h6>
+                        <td>
+                            {% if lista.foto %}
+                                <img src="{{ lista.foto.url }}" alt="Foto de {{ lista.nombre }}" class="img-fluid shadow-sm" style="max-width: 100px; max-height: 100px;">
+                            {% else %}
+                                <span class="text-muted">No hay foto disponible</span>
+                            {% endif %}
+                        </td>
                     </div>
                     <div class="card-body">
                         <h5 class="text-center">Votantes</h5>
